@@ -5,7 +5,7 @@
 
 	<groupId>com.botscrew</groupId>
 	<artifactId>bot-framework</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0-rc</version>
 	<packaging>jar</packaging>
 
 	<name>BotFrameworkd</name>
@@ -70,7 +70,18 @@
 			</plugin>
 	
 		</plugins>
+
 	</build>
+		<distributionManagement>
+        <repository>
+            <id>myMavenRepo.write</id>
+            <url>https://mymavenrepo.com/repo/UDnClpYBvzJK2pEcUW8m/</url>
+        </repository>
+        <snapshotRepository>
+            <id>myMavenRepo.write</id>
+            <url>https://mymavenrepo.com/repo/UDnClpYBvzJK2pEcUW8m/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 
 </project>
