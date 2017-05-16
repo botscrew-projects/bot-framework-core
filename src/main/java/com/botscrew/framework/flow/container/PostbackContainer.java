@@ -28,12 +28,21 @@ public class PostbackContainer<U extends ChatUser> {
 
 	private static final String ALL_STATES = "ALL_STATES";
 	private static final String DEFAULT_POSTBACK = "DEFAULT_POSTBACK";
+	private static final String DEFAULT_SPLITERATOR = "?";
 	private final Map<PostbackStatesKey, InstanceMethod> postbackActionsMap;
 	private final String packageName;
+	private final String spliterator;
 
 	public PostbackContainer(String packageName) {
-		postbackActionsMap = new ConcurrentHashMap<>();
+		this.postbackActionsMap = new ConcurrentHashMap<>();
 		this.packageName = packageName;
+		this.spliterator = DEFAULT_SPLITERATOR;
+	}
+
+	public PostbackContainer(String packageName, String spliterator) {
+		this.postbackActionsMap = new ConcurrentHashMap<>();
+		this.packageName = packageName;
+		this.spliterator = spliterator;
 	}
 
 	@PostConstruct
@@ -85,10 +94,24 @@ public class PostbackContainer<U extends ChatUser> {
 
 	public void processPostback(String postback, U user) {
 		String state = user.getState();
+		String postbackValue = postback;
+		if (postbackValue.contains(spliterator)) {
+			postbackValue = postbackValue.substring(0, postbackValue.indexOf(spliterator));
+		}
+		InstanceMethod instanceMethod = findInstanceMethod(postbackValue, state);
 
-		InstanceMethod instanceMethod = postbackActionsMap.get(new PostbackStatesKey(postback, state));
+		try {
+			instanceMethod.getMethod().invoke(instanceMethod.getInstance(), postback, user);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new ProcessorInnerException(e.getCause());
+		}
+
+	}
+
+	private InstanceMethod findInstanceMethod(String postbackValue, String state) {
+		InstanceMethod instanceMethod = postbackActionsMap.get(new PostbackStatesKey(postbackValue, state));
 		if (instanceMethod == null) {
-			instanceMethod = postbackActionsMap.get(new PostbackStatesKey(postback, ALL_STATES));
+			instanceMethod = postbackActionsMap.get(new PostbackStatesKey(postbackValue, ALL_STATES));
 			if (instanceMethod == null) {
 				instanceMethod = postbackActionsMap.get(new PostbackStatesKey(DEFAULT_POSTBACK, state));
 				if (instanceMethod == null) {
@@ -101,13 +124,7 @@ public class PostbackContainer<U extends ChatUser> {
 			}
 
 		}
-
-		try {
-			instanceMethod.getMethod().invoke(instanceMethod.getInstance(), postback, user);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new ProcessorInnerException(e.getCause());
-		}
-
+		return instanceMethod;
 	}
 
 }
