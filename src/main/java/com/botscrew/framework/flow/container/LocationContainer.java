@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -39,25 +40,23 @@ public class LocationContainer<U extends ChatUser> {
 		Reflections reflections = new Reflections(packageName);
 		Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(LocationProcessor.class);
 
-		for (Class<?> c : annotated) {
-			for (Method m : c.getMethods()) {
-				if (m.isAnnotationPresent(Location.class)) {
-					checkParameters(m);
-					InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
-					Location location = m.getAnnotation(Location.class);
+		annotated.forEach(c -> {
+			Stream.of(c.getMethods()).filter(m -> m.isAnnotationPresent(Location.class)).forEach(m -> {
+				checkParameters(m);
+				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
+				Location location = m.getAnnotation(Location.class);
 
-					if (location.states().length == 0) {
-						addAction(ALL_STATES, instanceMethod);
+				if (location.states().length == 0) {
+					addAction(ALL_STATES, instanceMethod);
 
-					} else {
-						for (String state : location.states()) {
-							addAction(state, instanceMethod);
-						}
+				} else {
+					for (String state : location.states()) {
+						addAction(state, instanceMethod);
 					}
-
 				}
-			}
-		}
+
+			});
+		});
 	}
 
 	public void processLocation(double latitude, double longitude, U user) {

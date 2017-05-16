@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -40,25 +41,21 @@ public class TextContainer<U extends ChatUser> {
 		Reflections reflections = new Reflections(packageName);
 		Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(TextProcessor.class);
 
-		for (Class<?> clazz : annotated) {
-			for (Method method : clazz.getMethods()) {
-				if (method.isAnnotationPresent(Text.class)) {
-					checkParameters(method);
-					InstanceMethod instanceMethod = new InstanceMethod(context.getBean(clazz), method);
-					Text text = method.getAnnotation(Text.class);
+		annotated.forEach(clazz -> {
+			Stream.of(clazz.getMethods()).filter(m -> m.isAnnotationPresent(Text.class)).forEach(m -> {
+				checkParameters(m);
+				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(clazz), m);
+				Text text = m.getAnnotation(Text.class);
 
-					if (text.states().length == 0) {
-						addAction(ALL_STATES, instanceMethod);
-
-					} else {
-						for (String state : text.states()) {
-							addAction(state, instanceMethod);
-						}
+				if (text.states().length == 0) {
+					addAction(ALL_STATES, instanceMethod);
+				} else {
+					for (String state : text.states()) {
+						addAction(state, instanceMethod);
 					}
-
 				}
-			}
-		}
+			});
+		});
 	}
 
 	public void processText(String text, U user) {

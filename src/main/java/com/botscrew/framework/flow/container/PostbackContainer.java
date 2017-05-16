@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -50,29 +51,26 @@ public class PostbackContainer<U extends ChatUser> {
 		Reflections reflections = new Reflections(packageName);
 		Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(PostbackProcessor.class);
 
-		for (Class<?> c : annotated) {
-			for (Method m : c.getMethods()) {
-				if (m.isAnnotationPresent(Postback.class)) {
-					checkParameters(m);
-					InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
-					Postback postback = m.getAnnotation(Postback.class);
-					String postbackValue = postback.postback();
-					if (postbackValue.isEmpty()) {
-						postbackValue = DEFAULT_POSTBACK;
-					}
-
-					if (postback.states().length == 0) {
-						addAction(new PostbackStatesKey(postbackValue, ALL_STATES), instanceMethod);
-
-					} else {
-						for (String state : postback.states()) {
-							addAction(new PostbackStatesKey(postbackValue, state), instanceMethod);
-						}
-					}
-
+		annotated.forEach(c -> {
+			Stream.of(c.getMethods()).filter(m -> m.isAnnotationPresent(Postback.class)).forEach(m -> {
+				checkParameters(m);
+				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
+				Postback postback = m.getAnnotation(Postback.class);
+				String postbackValue = postback.postback();
+				if (postbackValue.isEmpty()) {
+					postbackValue = DEFAULT_POSTBACK;
 				}
-			}
-		}
+
+				if (postback.states().length == 0) {
+					addAction(new PostbackStatesKey(postbackValue, ALL_STATES), instanceMethod);
+
+				} else {
+					for (String state : postback.states()) {
+						addAction(new PostbackStatesKey(postbackValue, state), instanceMethod);
+					}
+				}
+			});
+		});
 	}
 
 	private void addAction(PostbackStatesKey postbackStatesKey, InstanceMethod instanceMethod) {

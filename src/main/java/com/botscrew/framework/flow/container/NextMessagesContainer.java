@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -38,25 +39,21 @@ public class NextMessagesContainer<U extends ChatUser> {
 		Reflections reflections = new Reflections(packageName);
 		Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(MessageSender.class);
 
-		for (Class<?> c : annotated) {
-			for (Method m : c.getMethods()) {
-				if (m.isAnnotationPresent(NextMessage.class)) {
-					checkParameters(m);
-					InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
-					NextMessage nextMessage = m.getAnnotation(NextMessage.class);
+		annotated.forEach(c -> {
+			Stream.of(c.getMethods()).filter(m -> m.isAnnotationPresent(NextMessage.class)).forEach(m -> {
+				checkParameters(m);
+				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
+				NextMessage nextMessage = m.getAnnotation(NextMessage.class);
 
-					if (nextMessage.states().length == 0) {
-						addAction(ALL_STATES, instanceMethod);
-
-					} else {
-						for (String state : nextMessage.states()) {
-							addAction(state, instanceMethod);
-						}
+				if (nextMessage.states().length == 0) {
+					addAction(ALL_STATES, instanceMethod);
+				} else {
+					for (String state : nextMessage.states()) {
+						addAction(state, instanceMethod);
 					}
-
 				}
-			}
-		}
+			});
+		});
 	}
 
 	public void sendNextMessage(U user) {
