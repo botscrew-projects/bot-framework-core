@@ -18,7 +18,7 @@ To add this library to your project you need to update your pom.xml file:
     <dependency>
 		<groupId>com.botscrew</groupId>
 		<artifactId>bot-framework</artifactId>
-		<version>1.1.0-rc</version>
+		<version>1.1.0-rc2</version>
 	</dependency>
 ```
 
