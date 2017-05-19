@@ -8,6 +8,7 @@ public class TypeChecker {
 	}
 
 	public static boolean isInterfaceImplementing(Class<?> type, Class<?> interfaceType) {
-		return Arrays.stream(type.getInterfaces()).filter(clazz -> clazz.equals(interfaceType)).findAny().isPresent();
+		return type.equals(interfaceType) || Arrays.stream(type.getInterfaces())
+				.filter(clazz -> clazz.equals(interfaceType)).findAny().isPresent();
 	}
 }

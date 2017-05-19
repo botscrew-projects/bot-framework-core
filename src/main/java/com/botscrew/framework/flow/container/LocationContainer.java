@@ -1,37 +1,41 @@
 package com.botscrew.framework.flow.container;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
 import org.reflections.Reflections;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import com.botscrew.framework.flow.annotation.Location;
 import com.botscrew.framework.flow.annotation.LocationProcessor;
 import com.botscrew.framework.flow.exception.DuplicatedActionException;
 import com.botscrew.framework.flow.exception.ProcessorInnerException;
 import com.botscrew.framework.flow.exception.WrongMethodSignatureException;
+import com.botscrew.framework.flow.model.ArgumentType;
 import com.botscrew.framework.flow.model.ChatUser;
+import com.botscrew.framework.flow.model.GeoCoordinates;
 import com.botscrew.framework.flow.model.InstanceMethod;
+import com.botscrew.framework.flow.util.ParametersUtils;
 import com.botscrew.framework.flow.util.TypeChecker;
 
-public class LocationContainer<U extends ChatUser> {
-	@Autowired
-	private ApplicationContext context;
+public class LocationContainer<U extends ChatUser> extends AbstractContainer {
 
-	private static final String ALL_STATES = "ALL_STATES";
 	private final Map<String, InstanceMethod> locationActionsMap;
-	private final String packageName;
 
 	public LocationContainer(String packageName) {
-		this.packageName = packageName;
+		super(packageName);
+		locationActionsMap = new ConcurrentHashMap<>();
+	}
+
+	public LocationContainer(String packageName, String spliterator) {
+		super(packageName, spliterator);
 		locationActionsMap = new ConcurrentHashMap<>();
 	}
 
@@ -42,8 +46,8 @@ public class LocationContainer<U extends ChatUser> {
 
 		annotated.forEach(c -> {
 			Stream.of(c.getMethods()).filter(m -> m.isAnnotationPresent(Location.class)).forEach(m -> {
-				checkParameters(m);
-				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
+
+				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m, getArgumentTypes(m));
 				Location location = m.getAnnotation(Location.class);
 
 				if (location.states().length == 0) {
@@ -59,23 +63,30 @@ public class LocationContainer<U extends ChatUser> {
 		});
 	}
 
-	public void processLocation(double latitude, double longitude, U user) {
-		String state = user.getState();
-
-		InstanceMethod instanceMethod = locationActionsMap.get(state);
-		if (instanceMethod == null) {
-			instanceMethod = locationActionsMap.get(ALL_STATES);
-			if (instanceMethod == null) {
-				throw new IllegalArgumentException("No method with annotation @Location which meets given parameters");
-			}
-		}
+	public void processLocation(GeoCoordinates coordinates, U user) {
+		InstanceMethod instanceMethod = findInstanceMethod(user);
 
 		try {
-			instanceMethod.getMethod().invoke(instanceMethod.getInstance(), latitude, longitude, user);
+			instanceMethod.getMethod().invoke(instanceMethod.getInstance(),
+					getArguments(instanceMethod.getArgumentTypes(), coordinates, user));
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ProcessorInnerException(e.getCause());
 		}
 
+	}
+
+	private InstanceMethod findInstanceMethod(ChatUser user) {
+		String stateValue = ParametersUtils.getValueWithoutParams(user.getState(), spliterator);
+
+		InstanceMethod instanceMethod = locationActionsMap.get(stateValue);
+		if (instanceMethod == null) {
+			instanceMethod = locationActionsMap.get(ALL_STATES);
+			if (instanceMethod == null) {
+				throw new IllegalArgumentException(
+						"No method with annotation @Location which meets given parameters, state:" + user.getState());
+			}
+		}
+		return instanceMethod;
 	}
 
 	private void addAction(String state, InstanceMethod instanceMethod) {
@@ -85,14 +96,43 @@ public class LocationContainer<U extends ChatUser> {
 		locationActionsMap.put(state, instanceMethod);
 	}
 
-	private void checkParameters(Method m) {
-		Class<?>[] parameterTypes = m.getParameterTypes();
-		if (parameterTypes.length != 3 || !parameterTypes[0].equals(double.class)
-				|| !parameterTypes[1].equals(double.class)
-				|| !TypeChecker.isInterfaceImplementing(parameterTypes[2], ChatUser.class)) {
-			throw new WrongMethodSignatureException(
-					"Method should have 3 arguments: double value of latitude and longitude , instance of class which implements ChatUser ");
+	@Override
+	protected ArgumentType getArgumentType(Class<?> type, Annotation[] annotations) {
+		if (type.equals(GeoCoordinates.class)) {
+			return ArgumentType.COORDINATES;
 		}
+		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
+			return ArgumentType.USER;
+		}
+		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
+			return ArgumentType.STATE_PARAMETERS;
+		}
+		throw new WrongMethodSignatureException(
+				"Methods can only contain next parameters: " + "Coordinates.class , ChatUser "
+						+ "and Map<String,String> state parameters. All of these parameters are optional");
+	}
+
+	private Object[] getArguments(List<ArgumentType> types, GeoCoordinates coordinates, ChatUser user) {
+		final Object[] result = new Object[types.size()];
+		IntStream.range(0, types.size()).forEach(index -> {
+			switch (types.get(index)) {
+			case USER:
+				result[index] = user;
+				break;
+			case COORDINATES:
+				result[index] = coordinates;
+				break;
+			case STATE_PARAMETERS:
+				result[index] = ParametersUtils.getParameters(user.getState(), spliterator);
+				break;
+			default:
+				throw new WrongMethodSignatureException("Wrong parameters");
+			}
+
+		});
+
+		return result;
+
 	}
 
 }

@@ -1,49 +1,44 @@
 package com.botscrew.framework.flow.container;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
 import org.reflections.Reflections;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import com.botscrew.framework.flow.annotation.Postback;
+import com.botscrew.framework.flow.annotation.PostbackParameters;
 import com.botscrew.framework.flow.annotation.PostbackProcessor;
+import com.botscrew.framework.flow.annotation.StateParameters;
 import com.botscrew.framework.flow.exception.DuplicatedActionException;
 import com.botscrew.framework.flow.exception.ProcessorInnerException;
 import com.botscrew.framework.flow.exception.WrongMethodSignatureException;
+import com.botscrew.framework.flow.model.ArgumentType;
 import com.botscrew.framework.flow.model.ChatUser;
 import com.botscrew.framework.flow.model.InstanceMethod;
 import com.botscrew.framework.flow.model.PostbackStatesKey;
+import com.botscrew.framework.flow.util.ParametersUtils;
 import com.botscrew.framework.flow.util.TypeChecker;
 
-public class PostbackContainer<U extends ChatUser> {
-	@Autowired
-	private ApplicationContext context;
-
-	private static final String ALL_STATES = "ALL_STATES";
+public class PostbackContainer<U extends ChatUser> extends AbstractContainer {
 	private static final String DEFAULT_POSTBACK = "DEFAULT_POSTBACK";
-	private static final String DEFAULT_SPLITERATOR = "?";
 	private final Map<PostbackStatesKey, InstanceMethod> postbackActionsMap;
-	private final String packageName;
-	private final String spliterator;
 
 	public PostbackContainer(String packageName) {
+		super(packageName);
 		this.postbackActionsMap = new ConcurrentHashMap<>();
-		this.packageName = packageName;
-		this.spliterator = DEFAULT_SPLITERATOR;
 	}
 
 	public PostbackContainer(String packageName, String spliterator) {
+		super(packageName, spliterator);
 		this.postbackActionsMap = new ConcurrentHashMap<>();
-		this.packageName = packageName;
-		this.spliterator = spliterator;
 	}
 
 	@PostConstruct
@@ -53,8 +48,8 @@ public class PostbackContainer<U extends ChatUser> {
 
 		annotated.forEach(c -> {
 			Stream.of(c.getMethods()).filter(m -> m.isAnnotationPresent(Postback.class)).forEach(m -> {
-				checkParameters(m);
-				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m);
+				List<ArgumentType> arguments = getArgumentTypes(m);
+				InstanceMethod instanceMethod = new InstanceMethod(context.getBean(c), m, arguments);
 				Postback postback = m.getAnnotation(Postback.class);
 				String postbackValue = postback.postback();
 				if (postbackValue.isEmpty()) {
@@ -81,43 +76,86 @@ public class PostbackContainer<U extends ChatUser> {
 		postbackActionsMap.put(postbackStatesKey, instanceMethod);
 	}
 
-	private void checkParameters(Method m) {
-		Class<?>[] parameterTypes = m.getParameterTypes();
-		if (parameterTypes.length != 2 || !parameterTypes[0].equals(String.class)
-				|| !TypeChecker.isInterfaceImplementing(parameterTypes[1], ChatUser.class)) {
-			throw new WrongMethodSignatureException(
-					"Method should have 2 arguments: instance of String, instance of class which implements ChatUser ");
+	@Override
+	protected ArgumentType getArgumentType(Class<?> type, Annotation[] annotations) {
+		if (type.equals(String.class)) {
+			return ArgumentType.POSTBACK;
 		}
+		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
+			return ArgumentType.USER;
+		}
+		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
+			Stream<Annotation> stream = Stream.of(annotations);
+			if (stream.anyMatch(a -> a.annotationType().equals(PostbackParameters.class))) {
+				return ArgumentType.POSTBACK_PARAMETERS;
+			}
+			stream = Stream.of(annotations);
+			if (stream.anyMatch(a -> a.annotationType().equals(StateParameters.class))) {
+				return ArgumentType.STATE_PARAMETERS;
+			}
+		}
+
+		throw new WrongMethodSignatureException("Methods can only contains next parameters: "
+				+ "String value of Postback, ChatUser, Map<String,String> postback parameters with annotation @PostbackParams"
+				+ "and Map<String,String> state parameters with annotation @StateParams. All of these arguments are optional");
 	}
 
 	public void processPostback(String postback, U user) {
-		String state = user.getState();
-		String postbackValue = postback;
-		if (postbackValue.contains(spliterator)) {
-			postbackValue = postbackValue.substring(0, postbackValue.indexOf(spliterator));
-		}
-		InstanceMethod instanceMethod = findInstanceMethod(postbackValue, state);
+
+		String postbackValue = ParametersUtils.getValueWithoutParams(postback, spliterator);
+
+		InstanceMethod instanceMethod = findInstanceMethod(postbackValue, user);
 
 		try {
-			instanceMethod.getMethod().invoke(instanceMethod.getInstance(), postback, user);
+			instanceMethod.getMethod().invoke(instanceMethod.getInstance(),
+					getArguments(instanceMethod.getArgumentTypes(), postback, user));
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ProcessorInnerException(e.getCause());
 		}
 
 	}
 
-	private InstanceMethod findInstanceMethod(String postbackValue, String state) {
-		InstanceMethod instanceMethod = postbackActionsMap.get(new PostbackStatesKey(postbackValue, state));
+	private Object[] getArguments(List<ArgumentType> types, String postback, ChatUser user) {
+		final Object[] result = new Object[types.size()];
+		IntStream.range(0, types.size()).forEach(index -> {
+			switch (types.get(index)) {
+			case USER:
+				result[index] = user;
+				break;
+			case POSTBACK:
+				result[index] = ParametersUtils.getValueWithoutParams(postback, spliterator);
+				break;
+			case POSTBACK_PARAMETERS:
+				result[index] = ParametersUtils.getParameters(postback, spliterator);
+				break;
+			case STATE_PARAMETERS:
+				result[index] = ParametersUtils.getParameters(user.getState(), spliterator);
+				break;
+			default:
+				throw new WrongMethodSignatureException("Wrong parameters");
+			}
+
+		});
+
+		return result;
+
+	}
+
+	private InstanceMethod findInstanceMethod(String postbackValue, ChatUser user) {
+		String stateValue = ParametersUtils.getValueWithoutParams(user.getState(), spliterator);
+
+		InstanceMethod instanceMethod = postbackActionsMap.get(new PostbackStatesKey(postbackValue, stateValue));
 		if (instanceMethod == null) {
 			instanceMethod = postbackActionsMap.get(new PostbackStatesKey(postbackValue, ALL_STATES));
 			if (instanceMethod == null) {
-				instanceMethod = postbackActionsMap.get(new PostbackStatesKey(DEFAULT_POSTBACK, state));
+				instanceMethod = postbackActionsMap.get(new PostbackStatesKey(DEFAULT_POSTBACK, stateValue));
 				if (instanceMethod == null) {
 					instanceMethod = postbackActionsMap.get(new PostbackStatesKey(DEFAULT_POSTBACK, ALL_STATES));
 				}
 				if (instanceMethod == null) {
 					throw new IllegalArgumentException(
-							"No method with annotation @Postback which meets given parameters");
+							"No method with annotation @Postback which meets given parameters: postback:"
+									+ postbackValue + ", state:" + stateValue);
 				}
 			}
 
