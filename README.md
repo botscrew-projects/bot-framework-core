@@ -29,7 +29,8 @@ After that, library is ready to use.
 1) First you need to create beans for all needed containers.
 
 There are 3 available conatiners: PostbackContainer, TextContainer, LocationContainer
-Containers' constructors have one parameter "packageName", which is the root package where your processors is located.
+Containers' constructors have one parameter "packageName", which is the root package where your processors are located.
+
 Example:
 ```java
 	@Bean
@@ -38,14 +39,14 @@ Example:
 	}
 ```
 
-Containers are a used as an entry for your requests they redirect your request based on their contents and *ChatUser`s* object state.
+Containers are a used as an entry for your requests, they redirect them to appropriate processors based on their contents and *ChatUser`s* state.
 
 2) Create classes with annotations @PostbackProcessor, @TextProcessor, @LocationProcessor
 > **Note:**
    `PostbackContainer` has one more constructor with spliterator parameter
 >
 
-    If the class is located inside of the package we have specified inside of appropriate container bean is annotated with one of this annotations,
+If the class is located inside of the package we have specified inside of appropriate container bean is annotated with one of this annotations,
 its methods are going to be used as a as processors for text messages submitted to appropriate container.
 
 
@@ -74,7 +75,7 @@ Next create a processors beans and methods inside of them to which our messages 
    textContainer.processText(messageText, chatUser);
 ```
 
-    Each method with @Text annotation is used as processor for requests. Each state can have only one processor, but one processor can be responsible for multiple states.
+Each method with @Text annotation is used as processor for requests. Each state can have only one processor, but one processor can be responsible for multiple states.
 If multiple processing methods are responsible for requests with the same states you will get a runtime DuplicatedActionException exeption on startup.
 If you do not specify any of the *ChatUser* states in your method it is going to be treated as a fallback method and going to be used only when some state does not have a
 corresponding processing method, the same way as with any other processing method there can only be one processing method with no specified states.
@@ -83,7 +84,7 @@ corresponding processing method, the same way as with any other processing metho
 
 <h3>Processing postback messages</h3>
 
-    Postbacks` payload is defined by us unlike text messages instead of users. So not only we can use this static values to map particular messages to their processing methods
+Postbacks` payload is defined by us unlike text messages instead of users. So not only we can use this static values to map particular messages to their processing methods
 but also define some postback parameters by including them as key value pairs of strings into postback value separated with '?' by default or spliterator defined inside of
 PostbackContainer constructor.
 
@@ -93,7 +94,7 @@ PostbackContainer constructor.
         return new PosbackContainer(packageWithPostbackPorcessorsName, spliterator);
     }
 ```
-    Just like TextContainer - PostbackContainer will use the package name defined inside of it`s constructor to find any classes annotated with @PostbackProcessor annotation.
+Just like TextContainer - PostbackContainer will use the package name defined inside of it`s constructor to find any classes annotated with @PostbackProcessor annotation.
 And then find methods annotated with @Postback annotation inside those classes. These methods are going to be called based on requests`
 postback value as well as user user state. Here is how it works:
 
@@ -117,7 +118,7 @@ postback value as well as user user state. Here is how it works:
     }
 ```
 
-    Just like *ChatUser`s* states - postbacks can contain parameters. If you don't need to include state parameters map in your @Postback annotated method you can simply include an
+Just like *ChatUser`s* states - postbacks can contain parameters. If you don't need to include state parameters map in your @Postback annotated method you can simply include an
 argument with class Map<String, String> and it is going to be automatically assigned a value of postback parameters, if you want only state parameters or both state parameters
 and postback parameters you will have to put appropriate annotations on each method argument.
 
