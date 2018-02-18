@@ -31,7 +31,7 @@ public abstract class AbstractContainer {
 				.collect(Collectors.toList());
 	}
 
-	public abstract void registrate(Object object);
+	public abstract void register(Object object);
 
 	protected abstract ArgumentType getArgumentType(Class<?> type, Annotation[] annotations);
 

@@ -34,7 +34,7 @@ public class TextContainer extends AbstractContainer {
 	}
 
 	@Override
-	public void registrate(Object object) {
+	public void register(Object object) {
 		Stream.of(object.getClass().getMethods()).filter(m -> m.isAnnotationPresent(Text.class)).forEach(m -> {
 				List<ArgumentType> arguments = getArgumentTypes(m);
 				InstanceMethod instanceMethod = new InstanceMethod(object, m, arguments);

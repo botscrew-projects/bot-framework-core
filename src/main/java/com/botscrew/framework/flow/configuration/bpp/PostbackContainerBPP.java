@@ -29,14 +29,14 @@ public class PostbackContainerBPP implements BeanPostProcessor {
             containers.add(casted);
 
             for (Object messagingEventsProcessor : messagingEventsProcessors) {
-                casted.registrate(messagingEventsProcessor);
+                casted.register(messagingEventsProcessor);
             }
         }
 
         if (o.getClass().isAnnotationPresent(ChatActionsProcessor.class)) {
             messagingEventsProcessors.add(o);
             for (AbstractContainer container : containers) {
-                container.registrate(o);
+                container.register(o);
             }
         }
         return o;

@@ -37,7 +37,7 @@ public class PostbackContainer extends AbstractContainer {
 	}
 
 	@Override
-	public void registrate(Object object) {
+	public void register(Object object) {
 		Method[] methods = object.getClass().getMethods();
 		for (Method m : methods) {
 			if (m.isAnnotationPresent(Postback.class)) {
