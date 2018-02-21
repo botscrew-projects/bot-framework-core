@@ -7,7 +7,6 @@ public class TestService {
 
     @Text
     public void processText(String text, ChatUser user, String param, Integer id) {
-
     }
 
 }

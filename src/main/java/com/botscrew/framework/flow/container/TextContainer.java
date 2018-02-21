@@ -1,9 +1,10 @@
 package com.botscrew.framework.flow.container;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -17,7 +18,6 @@ import com.botscrew.framework.flow.exception.WrongMethodSignatureException;
 import com.botscrew.framework.flow.model.ArgumentType;
 import com.botscrew.framework.flow.model.InstanceMethod;
 import com.botscrew.framework.flow.util.ParametersUtils;
-import com.botscrew.framework.flow.util.TypeChecker;
 
 public class TextContainer extends AbstractContainer {
 
@@ -92,19 +92,20 @@ public class TextContainer extends AbstractContainer {
 	}
 
 	@Override
-	protected ArgumentType getArgumentType(Class<?> type, Annotation[] annotations) {
-		if (type.equals(String.class)) {
-			return ArgumentType.TEXT;
-		}
-		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
-			return ArgumentType.USER;
-		}
-		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
-			return ArgumentType.STATE_PARAMETERS;
-		}
-		throw new WrongMethodSignatureException(
-				"Methods can only contain next parameters: " + "String value of user's message, ChatUser "
-						+ "and Map<String,String> state parameters. All of these parameters are optional");
+	protected ArgumentType getArgumentType(Parameter parameter) {
+		if (parameter.getName().equals("text")) return  ArgumentType.TEXT;
+
+		if (ChatUser.class.isAssignableFrom(parameter.getType())) return ArgumentType.USER;
+
+		if (Map.class.isAssignableFrom(parameter.getType())) return ArgumentType.STATE_PARAMETERS;
+
+		if (CharSequence.class.isAssignableFrom(parameter.getType())) return ArgumentType.PARAM_STRING;
+
+		Optional<ArgumentType> argumentTypeOpt = getArgumentTypeByClass(parameter.getType());
+
+		return argumentTypeOpt.orElseThrow(() -> new WrongMethodSignatureException(
+                "Methods can only contain next parameters: \n" +
+						"ChatUser implementation, Map, String, Long, Integer, Short, Byte, Double, Float"));
 	}
 
 	private Object[] getArguments(List<ArgumentType> types, String text, Object user, String state) {

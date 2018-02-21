@@ -3,6 +3,7 @@ package com.botscrew.framework.flow.container;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,8 +11,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.botscrew.framework.flow.annotation.Postback;
-import com.botscrew.framework.flow.annotation.PostbackParameters;
-import com.botscrew.framework.flow.annotation.StateParameters;
 import com.botscrew.framework.flow.exception.DuplicatedActionException;
 import com.botscrew.framework.flow.exception.ProcessorInnerException;
 import com.botscrew.framework.flow.exception.WrongMethodSignatureException;
@@ -20,7 +19,6 @@ import com.botscrew.framework.flow.model.ChatUser;
 import com.botscrew.framework.flow.model.InstanceMethod;
 import com.botscrew.framework.flow.model.PostbackStatesKey;
 import com.botscrew.framework.flow.util.ParametersUtils;
-import com.botscrew.framework.flow.util.TypeChecker;
 
 public class PostbackContainer extends AbstractContainer {
 	private static final String DEFAULT_POSTBACK = "DEFAULT_POSTBACK";
@@ -70,27 +68,28 @@ public class PostbackContainer extends AbstractContainer {
 	}
 
 	@Override
-	protected ArgumentType getArgumentType(Class<?> type, Annotation[] annotations) {
-		if (type.equals(String.class)) {
-			return ArgumentType.POSTBACK;
-		}
-		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
-			return ArgumentType.USER;
-		}
-		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
-			Stream<Annotation> stream = Stream.of(annotations);
-			if (stream.anyMatch(a -> a.annotationType().equals(PostbackParameters.class))) {
-				return ArgumentType.POSTBACK_PARAMETERS;
-			}
-			stream = Stream.of(annotations);
-			if (stream.anyMatch(a -> a.annotationType().equals(StateParameters.class))) {
-				return ArgumentType.STATE_PARAMETERS;
-			}
-		}
-
-		throw new WrongMethodSignatureException("Methods can only contains next parameters: "
-				+ "String value of Postback, ChatUser, Map<String,String> postback parameters with annotation @PostbackParams"
-				+ "and Map<String,String> state parameters with annotation @StateParams. All of these arguments are optional");
+	protected ArgumentType getArgumentType(Parameter parameter) {
+//		if (type.equals(String.class)) {
+//			return ArgumentType.POSTBACK;
+//		}
+//		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
+//			return ArgumentType.USER;
+//		}
+//		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
+//			Stream<Annotation> stream = Stream.of(annotations);
+//			if (stream.anyMatch(a -> a.annotationType().equals(PostbackParameters.class))) {
+//				return ArgumentType.POSTBACK_PARAMETERS;
+//			}
+//			stream = Stream.of(annotations);
+//			if (stream.anyMatch(a -> a.annotationType().equals(StateParameters.class))) {
+//				return ArgumentType.STATE_PARAMETERS;
+//			}
+//		}
+//
+//		throw new WrongMethodSignatureException("Methods can only contains next parameters: "
+//				+ "String value of Postback, ChatUser, Map<String,String> postback parameters with annotation @PostbackParams"
+//				+ "and Map<String,String> state parameters with annotation @StateParams. All of these arguments are optional");
+		return null;
 	}
 
 	public void processPostback(String postback, ChatUser user) {

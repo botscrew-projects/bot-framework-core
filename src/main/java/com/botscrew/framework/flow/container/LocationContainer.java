@@ -2,6 +2,7 @@ package com.botscrew.framework.flow.container;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -92,19 +93,20 @@ public class LocationContainer extends AbstractContainer {
 	}
 
 	@Override
-	protected ArgumentType getArgumentType(Class<?> type, Annotation[] annotations) {
-		if (type.equals(GeoCoordinates.class)) {
-			return ArgumentType.COORDINATES;
-		}
-		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
-			return ArgumentType.USER;
-		}
-		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
-			return ArgumentType.STATE_PARAMETERS;
-		}
-		throw new WrongMethodSignatureException(
-				"Methods can only contain next parameters: " + "Coordinates.class , ChatUser "
-						+ "and Map<String,String> state parameters. All of these parameters are optional");
+	protected ArgumentType getArgumentType(Parameter parameter) {
+//		if (type.equals(GeoCoordinates.class)) {
+//			return ArgumentType.COORDINATES;
+//		}
+//		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
+//			return ArgumentType.USER;
+//		}
+//		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
+//			return ArgumentType.STATE_PARAMETERS;
+//		}
+//		throw new WrongMethodSignatureException(
+//				"Methods can only contain next parameters: " + "Coordinates.class , ChatUser "
+//						+ "and Map<String,String> state parameters. All of these parameters are optional");
+		return null;
 	}
 
 	private Object[] getArguments(List<ArgumentType> types, GeoCoordinates coordinates, Object user, String state) {
