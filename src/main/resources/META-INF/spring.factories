@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.botscrew.framework.flow.configuration.BotFrameworkConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.botscrew.botframework.configuration.BotFrameworkConfiguration
