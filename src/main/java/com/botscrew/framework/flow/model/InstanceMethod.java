@@ -1,12 +1,14 @@
 package com.botscrew.framework.flow.model;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
 
 public class InstanceMethod {
 	private Object instance;
 	private Method method;
 	private List<ArgumentType> argumentTypes;
+	private List<Parameter> parameters;
 
 	public InstanceMethod(Object instance, Method method) {
 		super();
@@ -14,11 +16,11 @@ public class InstanceMethod {
 		this.method = method;
 	}
 
-	public InstanceMethod(Object instance, Method method, List<ArgumentType> argumentTypes) {
-		super();
+	public InstanceMethod(Object instance, Method method, List<ArgumentType> argumentTypes, List<Parameter> parameters) {
 		this.instance = instance;
 		this.method = method;
 		this.argumentTypes = argumentTypes;
+		this.parameters = parameters;
 	}
 
 	public Object getInstance() {
@@ -45,4 +47,11 @@ public class InstanceMethod {
 		this.argumentTypes = argumentTypes;
 	}
 
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(List<Parameter> parameters) {
+		this.parameters = parameters;
+	}
 }

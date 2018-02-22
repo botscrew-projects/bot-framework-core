@@ -2,10 +2,12 @@ package com.botscrew.framework.flow.container;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -22,6 +24,7 @@ import com.botscrew.framework.flow.util.ParametersUtils;
 public class TextContainer extends AbstractContainer {
 
 	private final Map<String, InstanceMethod> textActionsMap;
+	private final Map<ArgumentType, BiFunction<Parameter, String, Object>> parameterConverters;
 
 	public TextContainer() {
 		super();
@@ -37,7 +40,7 @@ public class TextContainer extends AbstractContainer {
 	public void register(Object object) {
 		Stream.of(object.getClass().getMethods()).filter(m -> m.isAnnotationPresent(Text.class)).forEach(m -> {
 				List<ArgumentType> arguments = getArgumentTypes(m);
-				InstanceMethod instanceMethod = new InstanceMethod(object, m, arguments);
+				InstanceMethod instanceMethod = new InstanceMethod(object, m, arguments, Arrays.asList(m.getParameters()));
 				Text text = m.getAnnotation(Text.class);
 
 				if (text.states().length == 0) {
@@ -53,19 +56,13 @@ public class TextContainer extends AbstractContainer {
 	public void processText(String text, ChatUser user) {
 		InstanceMethod instanceMethod = findInstanceMethod(user);
 		try {
-			Object casted = user;
-			Class<?>[] parameterTypes = instanceMethod.getMethod().getParameterTypes();
-			for (Class<?> parameterType : parameterTypes) {
-				if (ChatUser.class.isAssignableFrom(parameterType)) {
-					casted = parameterType.cast(user);
-				}
-			}
-
-			instanceMethod.getMethod().invoke(instanceMethod.getInstance(),
-					getArguments(instanceMethod.getArgumentTypes(), text, casted, user.getState()));
+			invoke(instanceMethod, text, user);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ProcessorInnerException(e.getCause());
 		}
+	}
+
+	private void invoke(InstanceMethod method, String text, ChatUser user) {
 
 	}
 
@@ -93,13 +90,11 @@ public class TextContainer extends AbstractContainer {
 
 	@Override
 	protected ArgumentType getArgumentType(Parameter parameter) {
-		if (parameter.getName().equals("text")) return  ArgumentType.TEXT;
+		if (parameter.getName().equals("text") && parameter.getType().equals(String.class)) return  ArgumentType.TEXT;
 
 		if (ChatUser.class.isAssignableFrom(parameter.getType())) return ArgumentType.USER;
 
 		if (Map.class.isAssignableFrom(parameter.getType())) return ArgumentType.STATE_PARAMETERS;
-
-		if (CharSequence.class.isAssignableFrom(parameter.getType())) return ArgumentType.PARAM_STRING;
 
 		Optional<ArgumentType> argumentTypeOpt = getArgumentTypeByClass(parameter.getType());
 
@@ -108,8 +103,10 @@ public class TextContainer extends AbstractContainer {
 						"ChatUser implementation, Map, String, Long, Integer, Short, Byte, Double, Float"));
 	}
 
-	private Object[] getArguments(List<ArgumentType> types, String text, Object user, String state) {
+	private Object[] getArguments(List<ArgumentType> types, String text, ChatUser user) {
 		final Object[] result = new Object[types.size()];
+		Map<String, String> parameters = ParametersUtils.getParameters(user.getState(), spliterator);
+
 		IntStream.range(0, types.size()).forEach(index -> {
 			switch (types.get(index)) {
 			case USER:
@@ -119,10 +116,12 @@ public class TextContainer extends AbstractContainer {
 				result[index] = text;
 				break;
 			case STATE_PARAMETERS:
-				result[index] = ParametersUtils.getParameters(state, spliterator);
+				result[index] = parameters;
 				break;
+				case PARAM_STRING:
+					result[index] =
 			default:
-				throw new WrongMethodSignatureException("Wrong parameters");
+				result[index] = null;
 			}
 
 		});
