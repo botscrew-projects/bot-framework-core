@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +41,7 @@ public class PostbackContainer extends AbstractContainer {
 		for (Method m : methods) {
 			if (m.isAnnotationPresent(Postback.class)) {
 				List<ArgumentType> arguments = getArgumentTypes(m);
-				InstanceMethod instanceMethod = new InstanceMethod(object, m, arguments);
+				InstanceMethod instanceMethod = new InstanceMethod(object, m, arguments, Arrays.asList(m.getParameters()));
 				Postback postback = m.getAnnotation(Postback.class);
 				String postbackValue = postback.postback();
 				if (postbackValue.isEmpty()) {

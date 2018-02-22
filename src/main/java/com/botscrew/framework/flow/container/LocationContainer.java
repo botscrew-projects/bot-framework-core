@@ -3,6 +3,7 @@ package com.botscrew.framework.flow.container;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +39,7 @@ public class LocationContainer extends AbstractContainer {
 		Stream.of(object.getClass().getMethods())
 				.filter(m -> m.isAnnotationPresent(Location.class))
 				.forEach(m -> {
-			InstanceMethod instanceMethod = new InstanceMethod(object, m, getArgumentTypes(m));
+			InstanceMethod instanceMethod = new InstanceMethod(object, m, getArgumentTypes(m), Arrays.asList(m.getParameters()));
 			Location location = m.getAnnotation(Location.class);
 
 			if (location.states().length == 0) {
