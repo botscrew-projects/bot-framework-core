@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class TextHandlerImpl {
-
-    private final List<Consumer<Object[]>> consumers = new ArrayList<>();
+public class TextHandlerImpl extends Followable {
 
     @Text
     public void consumeTextAndUser(@Text String text, UserImpl user) {
@@ -17,7 +15,7 @@ public class TextHandlerImpl {
         args[0] = text;
         args[1] = user;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
 
     @Text(states = {"stringParam"})
@@ -26,7 +24,7 @@ public class TextHandlerImpl {
         args[0] = user;
         args[1] = param;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
 
     @Text(states = {"intParam"})
@@ -35,7 +33,7 @@ public class TextHandlerImpl {
         args[0] = user;
         args[1] = param;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
 
     @Text(states = {"longParam"})
@@ -44,7 +42,7 @@ public class TextHandlerImpl {
         args[0] = user;
         args[1] = param;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
 
     @Text(states = {"byteParam"})
@@ -53,7 +51,7 @@ public class TextHandlerImpl {
         args[0] = user;
         args[1] = param;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
 
     @Text(states = {"shortParam"})
@@ -62,7 +60,7 @@ public class TextHandlerImpl {
         args[0] = user;
         args[1] = param;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
 
 
@@ -72,7 +70,7 @@ public class TextHandlerImpl {
         args[0] = user;
         args[1] = param;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
 
     @Text(states = {"doubleParam"})
@@ -81,13 +79,7 @@ public class TextHandlerImpl {
         args[0] = user;
         args[1] = param;
 
-        consumers.forEach(c -> c.accept(args));
+        getFollowers().forEach(c -> c.accept(args));
     }
-
-
-    public void addCallback(Consumer<Object[]> consumer) {
-        consumers.add(consumer);
-    }
-
 
 }

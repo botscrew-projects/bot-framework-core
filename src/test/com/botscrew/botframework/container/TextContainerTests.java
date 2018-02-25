@@ -126,7 +126,7 @@ public class TextContainerTests {
         TextContainer textContainer = new TextContainer();
         TextHandlerImpl textHandler = new TextHandlerImpl();
         List<Object> arguments = new ArrayList<>();
-        textHandler.addCallback(args -> arguments.addAll(Arrays.asList(args)));
+        textHandler.addFollower(args -> arguments.addAll(Arrays.asList(args)));
         textContainer.register(textHandler);
 
         textContainer.processText(text, user);
