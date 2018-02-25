@@ -5,6 +5,7 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -52,18 +53,9 @@ public class LocationContainer extends AbstractContainer {
 
 	public void processLocation(GeoCoordinates coordinates, ChatUser user) {
 		InstanceMethod instanceMethod = findInstanceMethod(user);
-
+		Object[] arguments = getArguments(instanceMethod.getArgumentTypes(), instanceMethod.getParameters(), coordinates, user);
 		try {
-			Object casted = user;
-			Class<?>[] parameterTypes = instanceMethod.getMethod().getParameterTypes();
-			for (Class<?> parameterType : parameterTypes) {
-				if (ChatUser.class.isAssignableFrom(parameterType)) {
-					casted = parameterType.cast(user);
-				}
-			}
-
-			instanceMethod.getMethod().invoke(instanceMethod.getInstance(),
-					getArguments(instanceMethod.getArgumentTypes(), coordinates, casted, user.getState()));
+			instanceMethod.getMethod().invoke(instanceMethod.getInstance(), arguments);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ProcessorInnerException(e.getCause());
 		}
@@ -93,42 +85,71 @@ public class LocationContainer extends AbstractContainer {
 
 	@Override
 	protected ArgumentType getArgumentType(Parameter parameter) {
-//		if (type.equals(GeoCoordinates.class)) {
-//			return ArgumentType.COORDINATES;
-//		}
-//		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
-//			return ArgumentType.USER;
-//		}
-//		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
-//			return ArgumentType.STATE_PARAMETERS;
-//		}
-//		throw new WrongMethodSignatureException(
-//				"Methods can only contain next parameters: " + "Coordinates.class , ChatUser "
-//						+ "and Map<String,String> state parameters. All of these parameters are optional");
-		return null;
+		Class<?> type = parameter.getType();
+
+		if (type.equals(GeoCoordinates.class)) return ArgumentType.COORDINATES;
+
+		if (ChatUser.class.isAssignableFrom(parameter.getType())) return ArgumentType.USER;
+
+		if (Map.class.isAssignableFrom(parameter.getType())) return ArgumentType.STATE_PARAMETERS;
+
+		Optional<ArgumentType> argumentTypeOpt = getArgumentTypeByClass(parameter.getType());
+
+		return argumentTypeOpt.orElseThrow(() -> new WrongMethodSignatureException(
+				"Methods can only contain next parameters: \n" +
+						"ChatUser implementation, Map, String, Long, Integer, Short, Byte, Double, Float"));
 	}
 
-	private Object[] getArguments(List<ArgumentType> types, GeoCoordinates coordinates, Object user, String state) {
+	private Object[] getArguments(List<ArgumentType> types, List<Parameter> parameters, GeoCoordinates coordinates, ChatUser user) {
 		final Object[] result = new Object[types.size()];
+		Map<String, String> stateParameters = ParametersUtils.getParameters(user.getState(), spliterator);
+
 		IntStream.range(0, types.size()).forEach(index -> {
+
 			switch (types.get(index)) {
-			case USER:
-				result[index] = user;
-				break;
-			case COORDINATES:
-				result[index] = coordinates;
-				break;
-			case STATE_PARAMETERS:
-				result[index] = ParametersUtils.getParameters(state, spliterator);
-				break;
-			default:
-				throw new WrongMethodSignatureException("Wrong parameters");
+				case USER:
+					result[index] = convertUser(user, parameters.get(index));
+					break;
+				case COORDINATES:
+					result[index] = coordinates;
+					break;
+				case STATE_PARAMETERS:
+					result[index] = stateParameters;
+					break;
+				case PARAM_STRING:
+					String name = getParamName(parameters.get(index));
+					result[index] = stateParameters.get(name);
+					break;
+				case PARAM_BYTE:
+					name = getParamName(parameters.get(index));
+					result[index] = Byte.valueOf(stateParameters.get(name));
+					break;
+				case PARAM_SHORT:
+					name = getParamName(parameters.get(index));
+					result[index] = Short.valueOf(stateParameters.get(name));
+					break;
+				case PARAM_INTEGER:
+					name = getParamName(parameters.get(index));
+					result[index] = Integer.valueOf(stateParameters.get(name));
+					break;
+				case PARAM_LONG:
+					name = getParamName(parameters.get(index));
+					result[index] = Long.valueOf(stateParameters.get(name));
+					break;
+				case PARAM_FLOAT:
+					name = getParamName(parameters.get(index));
+					result[index] = Float.valueOf(stateParameters.get(name));
+					break;
+				case PARAM_DOUBLE:
+					name = getParamName(parameters.get(index));
+					result[index] = Double.valueOf(stateParameters.get(name));
+					break;
+				default:
+					result[index] = null;
 			}
 
 		});
-
 		return result;
-
 	}
 
 }
