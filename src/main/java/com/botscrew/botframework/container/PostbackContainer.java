@@ -1,15 +1,8 @@
 package com.botscrew.botframework.container;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.IntStream;
-
 import com.botscrew.botframework.annotation.Postback;
+import com.botscrew.botframework.annotation.PostbackParameters;
+import com.botscrew.botframework.annotation.StateParameters;
 import com.botscrew.botframework.exception.DuplicatedActionException;
 import com.botscrew.botframework.exception.ProcessorInnerException;
 import com.botscrew.botframework.exception.WrongMethodSignatureException;
@@ -18,6 +11,13 @@ import com.botscrew.botframework.model.ChatUser;
 import com.botscrew.botframework.model.InstanceMethod;
 import com.botscrew.botframework.model.PostbackStatesKey;
 import com.botscrew.botframework.util.ParametersUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 public class PostbackContainer extends AbstractContainer {
 	private static final String DEFAULT_POSTBACK = "DEFAULT_POSTBACK";
@@ -68,74 +68,92 @@ public class PostbackContainer extends AbstractContainer {
 
 	@Override
 	protected ArgumentType getArgumentType(Parameter parameter) {
-//		if (type.equals(String.class)) {
-//			return ArgumentType.POSTBACK;
-//		}
-//		if (TypeChecker.isInterfaceImplementing(type, ChatUser.class)) {
-//			return ArgumentType.USER;
-//		}
-//		if (TypeChecker.isInterfaceImplementing(type, Map.class)) {
-//			Stream<Annotation> stream = Stream.of(annotations);
-//			if (stream.anyMatch(a -> a.annotationType().equals(PostbackParameters.class))) {
-//				return ArgumentType.POSTBACK_PARAMETERS;
-//			}
-//			stream = Stream.of(annotations);
-//			if (stream.anyMatch(a -> a.annotationType().equals(StateParameters.class))) {
-//				return ArgumentType.STATE_PARAMETERS;
-//			}
-//		}
-//
-//		throw new WrongMethodSignatureException("Methods can only contains next parameters: "
-//				+ "String value of Postback, ChatUser, Map<String,String> postback parameters with annotation @PostbackParams"
-//				+ "and Map<String,String> state parameters with annotation @StateParams. All of these arguments are optional");
-		return null;
+		if (parameter.isAnnotationPresent(Postback.class)) return ArgumentType.POSTBACK;
+
+		if (ChatUser.class.isAssignableFrom(parameter.getType())) return ArgumentType.USER;
+
+		Class<?> type = parameter.getType();
+		if (Map.class.isAssignableFrom(type)) {
+			if (type.isAnnotationPresent(PostbackParameters.class)) return ArgumentType.POSTBACK_PARAMETERS;
+			if (type.isAnnotationPresent(StateParameters.class)) return ArgumentType.STATE_PARAMETERS;
+		}
+
+		Optional<ArgumentType> argumentTypeOpt = getArgumentTypeByClass(parameter.getType());
+
+		return argumentTypeOpt.orElseThrow(() -> new WrongMethodSignatureException(
+				"Methods can only contain next parameters: \n" +
+						"ChatUser implementation, Map, String, Long, Integer, Short, Byte, Double, Float"));
 	}
 
 	public void processPostback(String postback, ChatUser user) {
 		String postbackValue = ParametersUtils.getValueWithoutParams(postback, spliterator);
 
 		InstanceMethod instanceMethod = findInstanceMethod(postbackValue, user);
-
-		Object casted = user;
-
+		Object[] arguments = getArguments(instanceMethod.getArgumentTypes(), instanceMethod.getParameters(), postback, user);
 		try {
-			Class<?>[] parameterTypes = instanceMethod.getMethod().getParameterTypes();
-			for (Class<?> parameterType : parameterTypes) {
-				if (ChatUser.class.isAssignableFrom(parameterType)) {
-					casted = parameterType.cast(user);
-				}
-			}
-
-			instanceMethod.getMethod().invoke(instanceMethod.getInstance(),
-					getArguments(instanceMethod.getArgumentTypes(), postback, casted, user.getState()));
+			instanceMethod.getMethod().invoke(instanceMethod.getInstance(), arguments);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ProcessorInnerException(e.getCause());
 		}
-
 	}
 
-	private Object[] getArguments(List<ArgumentType> types, String postback, Object user, String state) {
+	private Object[] getArguments(List<ArgumentType> types, List<Parameter> parameters, String postback, ChatUser user) {
 		final Object[] result = new Object[types.size()];
+
+		Map<String, String> stateParameters = ParametersUtils.getParameters(user.getState(), spliterator);
+		Map<String, String> postbackParameters = ParametersUtils.getParameters(postback, spliterator);
+
+		Map<String, String> allParameters = new HashMap<>(stateParameters);
+		allParameters.putAll(postbackParameters);
+
 		IntStream.range(0, types.size()).forEach(index -> {
+
 			switch (types.get(index)) {
-			case USER:
-				result[index] = user;
-				break;
-			case POSTBACK:
-				result[index] = ParametersUtils.getValueWithoutParams(postback, spliterator);
-				break;
-			case POSTBACK_PARAMETERS:
-				result[index] = ParametersUtils.getParameters(postback, spliterator);
-				break;
-			case STATE_PARAMETERS:
-				result[index] = ParametersUtils.getParameters(state, spliterator);
-				break;
-			default:
-				throw new WrongMethodSignatureException("Wrong parameters");
+				case USER:
+					result[index] = convertUser(user, parameters.get(index));
+					break;
+				case POSTBACK:
+					result[index] = postback;
+					break;
+				case STATE_PARAMETERS:
+					result[index] = stateParameters;
+					break;
+				case POSTBACK_PARAMETERS:
+					result[index] = postbackParameters;
+					break;
+				case PARAM_STRING:
+					String name = getParamName(parameters.get(index));
+					result[index] = allParameters.get(name);
+					break;
+				case PARAM_BYTE:
+					name = getParamName(parameters.get(index));
+					result[index] = Byte.valueOf(allParameters.get(name));
+					break;
+				case PARAM_SHORT:
+					name = getParamName(parameters.get(index));
+					result[index] = Short.valueOf(allParameters.get(name));
+					break;
+				case PARAM_INTEGER:
+					name = getParamName(parameters.get(index));
+					result[index] = Integer.valueOf(allParameters.get(name));
+					break;
+				case PARAM_LONG:
+					name = getParamName(parameters.get(index));
+					result[index] = Long.valueOf(allParameters.get(name));
+					break;
+				case PARAM_FLOAT:
+					name = getParamName(parameters.get(index));
+					result[index] = Float.valueOf(allParameters.get(name));
+					break;
+				case PARAM_DOUBLE:
+					name = getParamName(parameters.get(index));
+					result[index] = Double.valueOf(allParameters.get(name));
+					break;
+				default:
+					result[index] = null;
 			}
 
 		});
-
 		return result;
 	}
 

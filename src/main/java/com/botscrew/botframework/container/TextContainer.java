@@ -112,7 +112,7 @@ public class TextContainer extends AbstractContainer {
 
             switch (types.get(index)) {
                 case USER:
-                    result[index] = convertUser(user, parameters);
+                    result[index] = convertUser(user, parameters.get(index));
                     break;
                 case TEXT:
                     result[index] = text;
@@ -155,25 +155,4 @@ public class TextContainer extends AbstractContainer {
         });
         return result;
     }
-
-    private String getParamName(Parameter parameter) {
-        if (parameter.isNamePresent()) return parameter.getName();
-
-        if (parameter.isAnnotationPresent(Param.class)) {
-            return parameter.getAnnotation(Param.class).name();
-        }
-
-        LOGGER.warn("Parameter name is not available in runtime though is accessed");
-        return parameter.getName();
-    }
-
-    private Object convertUser(ChatUser user, List<Parameter> parameters) {
-		for (Parameter parameter : parameters) {
-			if (ChatUser.class.isAssignableFrom(parameter.getType()))
-				return parameter.getType().cast(user);
-		}
-		throw new ProcessorInnerException("Class " + user.getClass().getName() +
-				" is not implementation of ChatUser");
-	}
-
 }

@@ -1,6 +1,9 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.annotation.Param;
+import com.botscrew.botframework.exception.ProcessorInnerException;
 import com.botscrew.botframework.model.ArgumentType;
+import com.botscrew.botframework.model.ChatUser;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -41,8 +44,25 @@ public abstract class AbstractContainer {
 				.collect(Collectors.toList());
 	}
 
-	public Optional<ArgumentType> getArgumentTypeByClass(Class<?> type) {
+	Optional<ArgumentType> getArgumentTypeByClass(Class<?> type) {
 		return Optional.ofNullable(supportedArguments.get(type));
+	}
+
+	String getParamName(Parameter parameter) {
+		if (parameter.isNamePresent()) return parameter.getName();
+
+		if (parameter.isAnnotationPresent(Param.class)) {
+			return parameter.getAnnotation(Param.class).name();
+		}
+		return parameter.getName();
+	}
+
+	Object convertUser(ChatUser user, Parameter parameter) {
+		if (ChatUser.class.isAssignableFrom(parameter.getType()))
+			return parameter.getType().cast(user);
+
+		throw new ProcessorInnerException("Class " + user.getClass().getName() +
+				" is not implementation of ChatUser");
 	}
 
 	public abstract void register(Object object);
