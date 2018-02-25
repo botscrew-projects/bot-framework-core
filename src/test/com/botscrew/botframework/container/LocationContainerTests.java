@@ -27,7 +27,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassChatUserImplToMethod() {
+    public void shouldPassChatUserImplToMethod() {
         GeoCoordinates location = new GeoCoordinates(1.0, 1.0);
         String state = "default";
         UserImpl user = new UserImpl(state);
@@ -39,7 +39,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassStringParametersToTargetMethod() throws Exception {
+    public void shouldPassStringParametersToTargetMethod() throws Exception {
         String paramKey = "param";
         String paramValue = "value";
         String state = "stringParam?" + paramKey + "=" + paramValue;
@@ -52,7 +52,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassIntParametersToTargetMethod() throws Exception {
+    public void shouldPassIntParametersToTargetMethod() throws Exception {
         GeoCoordinates location = new GeoCoordinates(1.0, 1.0);
         String paramKey = "param";
         Integer paramValue = 1;
@@ -65,7 +65,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassLongParametersToTargetMethod() throws Exception {
+    public void shouldPassLongParametersToTargetMethod() throws Exception {
         GeoCoordinates location = new GeoCoordinates(1.0, 1.0);
         String paramKey = "param";
         Long paramValue = 10L;
@@ -78,7 +78,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassByteParametersToTargetMethod() throws Exception {
+    public void shouldPassByteParametersToTargetMethod() throws Exception {
         GeoCoordinates location = new GeoCoordinates(1.0, 1.0);
         String paramKey = "param";
         Byte paramValue = 5;
@@ -91,7 +91,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassShortParametersToTargetMethod() throws Exception {
+    public void shouldPassShortParametersToTargetMethod() throws Exception {
         GeoCoordinates location = new GeoCoordinates(1.0, 1.0);
         String paramKey = "param";
         Short paramValue = 3;
@@ -104,7 +104,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassFloatParametersToTargetMethod() throws Exception {
+    public void shouldPassFloatParametersToTargetMethod() throws Exception {
         GeoCoordinates location = new GeoCoordinates(1.0, 1.0);
         String paramKey = "param";
         Float paramValue = 4.83f;
@@ -117,7 +117,7 @@ public class LocationContainerTests {
     }
 
     @Test
-    public void textContainerShouldPassDoubleParametersToTargetMethod() throws Exception {
+    public void shouldPassDoubleParametersToTargetMethod() throws Exception {
         GeoCoordinates location = new GeoCoordinates(1.0, 1.0);
         String paramKey = "param";
         Double paramValue = 224332.56;
