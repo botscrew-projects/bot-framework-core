@@ -1,5 +1,6 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.exception.DuplicatedActionException;
 import com.botscrew.botframework.exception.ProcessorInnerException;
 import com.botscrew.botframework.exception.WrongMethodSignatureException;
@@ -108,6 +109,7 @@ public class TextContainer extends AbstractContainer {
         Map<String, String> stateParameters = ParametersUtils.getParameters(user.getState(), spliterator);
 
         IntStream.range(0, types.size()).forEach(index -> {
+
             switch (types.get(index)) {
                 case USER:
                     result[index] = convertUser(user, parameters);
@@ -119,31 +121,31 @@ public class TextContainer extends AbstractContainer {
                     result[index] = stateParameters;
                     break;
                 case PARAM_STRING:
-					String name = parameters.get(index).getName();
+					String name = getParamName(parameters.get(index));
 					result[index] = stateParameters.get(name);
                     break;
 				case PARAM_BYTE:
-					name = parameters.get(index).getName();
+					name = getParamName(parameters.get(index));
 					result[index] = Byte.valueOf(stateParameters.get(name));
 					break;
 				case PARAM_SHORT:
-					name = parameters.get(index).getName();
+                    name = getParamName(parameters.get(index));
 					result[index] = Short.valueOf(stateParameters.get(name));
 					break;
 				case PARAM_INTEGER:
-					name = parameters.get(index).getName();
+                    name = getParamName(parameters.get(index));
 					result[index] = Integer.valueOf(stateParameters.get(name));
 					break;
 				case PARAM_LONG:
-					name = parameters.get(index).getName();
+                    name = getParamName(parameters.get(index));
 					result[index] = Long.valueOf(stateParameters.get(name));
 					break;
 				case PARAM_FLOAT:
-					name = parameters.get(index).getName();
+                    name = getParamName(parameters.get(index));
 					result[index] = Float.valueOf(stateParameters.get(name));
 					break;
 				case PARAM_DOUBLE:
-					name = parameters.get(index).getName();
+                    name = getParamName(parameters.get(index));
 					result[index] = Double.valueOf(stateParameters.get(name));
 					break;
                 default:
@@ -152,10 +154,20 @@ public class TextContainer extends AbstractContainer {
 
         });
         return result;
-
     }
 
-	private Object convertUser(ChatUser user, List<Parameter> parameters) {
+    private String getParamName(Parameter parameter) {
+        if (parameter.isNamePresent()) return parameter.getName();
+
+        if (parameter.isAnnotationPresent(Param.class)) {
+            return parameter.getAnnotation(Param.class).name();
+        }
+
+        LOGGER.warn("Parameter name is not available in runtime though is accessed");
+        return parameter.getName();
+    }
+
+    private Object convertUser(ChatUser user, List<Parameter> parameters) {
 		for (Parameter parameter : parameters) {
 			if (ChatUser.class.isAssignableFrom(parameter.getType()))
 				return parameter.getType().cast(user);

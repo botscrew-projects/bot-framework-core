@@ -1,6 +1,6 @@
 package com.botscrew.botframework.configuration.bpp;
 
-import com.botscrew.botframework.annotation.ChatActionsProcessor;
+import com.botscrew.botframework.annotation.ChatEventsProcessor;
 import com.botscrew.botframework.container.AbstractContainer;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -33,7 +33,7 @@ public class PostbackContainerBPP implements BeanPostProcessor {
             }
         }
 
-        if (o.getClass().isAnnotationPresent(ChatActionsProcessor.class)) {
+        if (o.getClass().isAnnotationPresent(ChatEventsProcessor.class)) {
             messagingEventsProcessors.add(o);
             for (AbstractContainer container : containers) {
                 container.register(o);

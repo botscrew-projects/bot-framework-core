@@ -1,11 +1,13 @@
 package com.botscrew.botframework.annotation;
 
-import org.springframework.stereotype.Component;
-
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Component
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface ChatActionsProcessor {
+@Target({ElementType.PARAMETER})
+public @interface Param {
+
+    String name();
 }
