@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.botscrew</groupId>
-	<artifactId>bot-framework</artifactId>
+	<artifactId>bot-framework-spring-boot-starter</artifactId>
 	<version>1.0.0-RC1</version>
 	<packaging>jar</packaging>
 
-	<name>BotFrameworkd</name>
+	<name>BotFramework</name>
 	<description>Botscrew Bot Framework</description>
 
 	<parent>

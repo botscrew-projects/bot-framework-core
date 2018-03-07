@@ -4,10 +4,10 @@ public class PostbackStatesKey {
 	private String postback;
 	private String state;
 
-	public PostbackStatesKey(String postback, String states) {
+	public PostbackStatesKey(String postback, String state) {
 		super();
 		this.postback = postback;
-		this.state = states;
+		this.state = state;
 	}
 
 	public String getPostback() {
