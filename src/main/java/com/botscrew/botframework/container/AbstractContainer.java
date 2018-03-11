@@ -16,18 +16,18 @@ public abstract class AbstractContainer {
 	protected static final String ALL_STATES = "ALL_STATES";
 	private static final String DEFAULT_SPLITERATOR = "?";
 
-	private static final Map<Class, ArgumentType> supportedArguments;
+	private static final Map<Class, ArgumentType> supportedBaseTypes;
 
 	static {
-		supportedArguments = new HashMap<>();
+		supportedBaseTypes = new HashMap<>();
 
-		supportedArguments.put(Integer.class, ArgumentType.PARAM_INTEGER);
-		supportedArguments.put(Long.class, ArgumentType.PARAM_LONG);
-		supportedArguments.put(Byte.class, ArgumentType.PARAM_BYTE);
-		supportedArguments.put(Short.class, ArgumentType.PARAM_SHORT);
-		supportedArguments.put(Double.class, ArgumentType.PARAM_DOUBLE);
-		supportedArguments.put(Float.class, ArgumentType.PARAM_FLOAT);
-		supportedArguments.put(String.class, ArgumentType.PARAM_STRING);
+		supportedBaseTypes.put(Integer.class, ArgumentType.PARAM_INTEGER);
+		supportedBaseTypes.put(Long.class, ArgumentType.PARAM_LONG);
+		supportedBaseTypes.put(Byte.class, ArgumentType.PARAM_BYTE);
+		supportedBaseTypes.put(Short.class, ArgumentType.PARAM_SHORT);
+		supportedBaseTypes.put(Double.class, ArgumentType.PARAM_DOUBLE);
+		supportedBaseTypes.put(Float.class, ArgumentType.PARAM_FLOAT);
+		supportedBaseTypes.put(String.class, ArgumentType.PARAM_STRING);
 	}
 
 	public AbstractContainer() {
@@ -44,15 +44,15 @@ public abstract class AbstractContainer {
 				.collect(Collectors.toList());
 	}
 
-	Optional<ArgumentType> getArgumentTypeByClass(Class<?> type) {
-		return Optional.ofNullable(supportedArguments.get(type));
+	Optional<ArgumentType> getBaseTypeArgumentByClass(Class<?> type) {
+		return Optional.ofNullable(supportedBaseTypes.get(type));
 	}
 
 	String getParamName(Parameter parameter) {
 		if (parameter.isNamePresent()) return parameter.getName();
 
 		if (parameter.isAnnotationPresent(Param.class)) {
-			return parameter.getAnnotation(Param.class).name();
+			return parameter.getAnnotation(Param.class).value();
 		}
 		return parameter.getName();
 	}

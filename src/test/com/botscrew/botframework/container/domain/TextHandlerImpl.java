@@ -19,7 +19,7 @@ public class TextHandlerImpl extends Followable {
     }
 
     @Text(states = {"stringParam"})
-    public void consumeTextAndStringParam(UserImpl user, @Param(name = "param") String param) {
+    public void consumeTextAndStringParam(UserImpl user, @Param("param") String param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -28,7 +28,7 @@ public class TextHandlerImpl extends Followable {
     }
 
     @Text(states = {"intParam"})
-    public void consumeTextAndIntParam(UserImpl user, @Param(name = "param") Integer param) {
+    public void consumeTextAndIntParam(UserImpl user, @Param("param") Integer param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -37,7 +37,7 @@ public class TextHandlerImpl extends Followable {
     }
 
     @Text(states = {"longParam"})
-    public void consumeTextAndLongParam(UserImpl user, @Param(name = "param") Long param) {
+    public void consumeTextAndLongParam(UserImpl user, @Param("param") Long param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -46,7 +46,7 @@ public class TextHandlerImpl extends Followable {
     }
 
     @Text(states = {"byteParam"})
-    public void consumeTextAndByteParam(UserImpl user, @Param(name = "param") Byte param) {
+    public void consumeTextAndByteParam(UserImpl user, @Param("param") Byte param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -55,7 +55,7 @@ public class TextHandlerImpl extends Followable {
     }
 
     @Text(states = {"shortParam"})
-    public void consumeTextAndIntParam(UserImpl user, @Param(name = "param") Short param) {
+    public void consumeTextAndIntParam(UserImpl user, @Param("param") Short param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -65,7 +65,7 @@ public class TextHandlerImpl extends Followable {
 
 
     @Text(states = {"floatParam"})
-    public void consumeTextAndIntParam(UserImpl user, @Param(name = "param") Float param) {
+    public void consumeTextAndIntParam(UserImpl user, @Param("param") Float param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -74,7 +74,7 @@ public class TextHandlerImpl extends Followable {
     }
 
     @Text(states = {"doubleParam"})
-    public void consumeTextAndIntParam(UserImpl user, @Param(name = "param") Double param) {
+    public void consumeTextAndIntParam(UserImpl user, @Param("param") Double param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;

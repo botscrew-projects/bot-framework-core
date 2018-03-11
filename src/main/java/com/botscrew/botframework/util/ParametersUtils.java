@@ -20,7 +20,7 @@ public class ParametersUtils {
 	public static Map<String, String> getParameters(final String baseValue, final String spliterator) {
 		Map<String, String> parameters = new HashMap<>();
 
-		if (baseValue.indexOf(spliterator) > 0) {
+		if (baseValue.indexOf(spliterator) >= 0) {
 
 			String parametersString = baseValue.substring(baseValue.indexOf(spliterator) + spliterator.length());
 			while (true) {

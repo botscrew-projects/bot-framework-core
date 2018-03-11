@@ -1,14 +1,13 @@
 package com.botscrew.botframework.container;
 
-import com.botscrew.botframework.annotation.Param;
+import com.botscrew.botframework.annotation.Text;
 import com.botscrew.botframework.exception.DuplicatedActionException;
 import com.botscrew.botframework.exception.ProcessorInnerException;
 import com.botscrew.botframework.exception.WrongMethodSignatureException;
 import com.botscrew.botframework.model.ArgumentType;
+import com.botscrew.botframework.model.ChatUser;
 import com.botscrew.botframework.model.InstanceMethod;
 import com.botscrew.botframework.util.ParametersUtils;
-import com.botscrew.botframework.annotation.Text;
-import com.botscrew.botframework.model.ChatUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +96,7 @@ public class TextContainer extends AbstractContainer {
 
         if (Map.class.isAssignableFrom(parameter.getType())) return ArgumentType.STATE_PARAMETERS;
 
-        Optional<ArgumentType> argumentTypeOpt = getArgumentTypeByClass(parameter.getType());
+        Optional<ArgumentType> argumentTypeOpt = getBaseTypeArgumentByClass(parameter.getType());
 
         return argumentTypeOpt.orElseThrow(() -> new WrongMethodSignatureException(
                 "Methods can only contain next parameters: \n" +

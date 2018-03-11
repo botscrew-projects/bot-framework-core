@@ -93,7 +93,7 @@ public class LocationContainer extends AbstractContainer {
 
 		if (Map.class.isAssignableFrom(parameter.getType())) return ArgumentType.STATE_PARAMETERS;
 
-		Optional<ArgumentType> argumentTypeOpt = getArgumentTypeByClass(parameter.getType());
+		Optional<ArgumentType> argumentTypeOpt = getBaseTypeArgumentByClass(parameter.getType());
 
 		return argumentTypeOpt.orElseThrow(() -> new WrongMethodSignatureException(
 				"Methods can only contain next parameters: \n" +

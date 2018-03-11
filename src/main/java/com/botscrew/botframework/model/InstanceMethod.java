@@ -7,6 +7,7 @@ import java.util.List;
 public class InstanceMethod {
 	private Object instance;
 	private Method method;
+	private List<Argument> arguments;
 	private List<ArgumentType> argumentTypes;
 	private List<Parameter> parameters;
 
@@ -27,10 +28,6 @@ public class InstanceMethod {
 		return instance;
 	}
 
-	public void setInstance(Object instance) {
-		this.instance = instance;
-	}
-
 	public Method getMethod() {
 		return method;
 	}
@@ -43,15 +40,11 @@ public class InstanceMethod {
 		return argumentTypes;
 	}
 
-	public void setArgumentTypes(List<ArgumentType> argumentTypes) {
-		this.argumentTypes = argumentTypes;
-	}
-
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(List<Parameter> parameters) {
-		this.parameters = parameters;
+	public List<Argument> getArguments() {
+		return arguments;
 	}
 }

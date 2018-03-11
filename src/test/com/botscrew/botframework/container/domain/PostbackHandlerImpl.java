@@ -26,7 +26,7 @@ public class PostbackHandlerImpl extends Followable {
     }
 
     @Postback(postback = "stringParam")
-    public void consumeStringParam(UserImpl user, @Param(name = "param") String param) {
+    public void consumeStringParam(UserImpl user, @Param("param") String param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -35,7 +35,7 @@ public class PostbackHandlerImpl extends Followable {
     }
 
     @Postback(postback = "intParam")
-    public void consumeIntParam(UserImpl user, @Param(name = "param") Integer param) {
+    public void consumeIntParam(UserImpl user, @Param("param") Integer param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -44,7 +44,7 @@ public class PostbackHandlerImpl extends Followable {
     }
 
     @Postback(postback = "longParam")
-    public void consumeLongParam(UserImpl user, @Param(name = "param") Long param) {
+    public void consumeLongParam(UserImpl user, @Param("param") Long param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -53,7 +53,7 @@ public class PostbackHandlerImpl extends Followable {
     }
 
     @Postback(postback = "byteParam")
-    public void consumeByteParam(UserImpl user, @Param(name = "param") Byte param) {
+    public void consumeByteParam(UserImpl user, @Param("param") Byte param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -62,7 +62,7 @@ public class PostbackHandlerImpl extends Followable {
     }
 
     @Postback(postback = "shortParam")
-    public void consumeShortParam(UserImpl user, @Param(name = "param") Short param) {
+    public void consumeShortParam(UserImpl user, @Param("param") Short param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -72,7 +72,7 @@ public class PostbackHandlerImpl extends Followable {
 
 
     @Postback(postback = "floatParam")
-    public void consumeFloatParam(UserImpl user, @Param(name = "param") Float param) {
+    public void consumeFloatParam(UserImpl user, @Param("param") Float param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
@@ -81,7 +81,7 @@ public class PostbackHandlerImpl extends Followable {
     }
 
     @Postback(postback = "doubleParam")
-    public void consumeDoubleParam(UserImpl user, @Param(name = "param") Double param) {
+    public void consumeDoubleParam(UserImpl user, @Param("param") Double param) {
         Object[] args = new Object[2];
         args[0] = user;
         args[1] = param;
