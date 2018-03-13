@@ -89,8 +89,8 @@ public class IntentContainerTests {
     public void shouldPassNlpParamsToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithParams());
 
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("param1", new Object());
+        Map<Class, Object> parameters = new HashMap<>();
+        parameters.put(Object.class, new Object());
 
         intentContainer.process(new MyUser(), "intent", parameters);
 

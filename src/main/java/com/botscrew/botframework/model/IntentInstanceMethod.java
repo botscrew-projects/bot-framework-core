@@ -1,7 +1,8 @@
 package com.botscrew.botframework.model;
 
-import com.botscrew.botframework.annotation.NlpParameters;
+
 import com.botscrew.botframework.annotation.StateParameters;
+
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -21,10 +22,6 @@ public class IntentInstanceMethod extends AbstractMethod {
         for (int i = 0; i < parameters.length; i++) {
             if (ChatUser.class.isAssignableFrom(parameters[i].getType())) {
                 arguments[i] = new Argument(ArgumentType.USER, parameters[i]);
-                continue;
-            }
-            if (parameters[i].isAnnotationPresent(NlpParameters.class)) {
-                arguments[i] = new Argument(ArgumentType.NLP_PARAMS, parameters[i]);
                 continue;
             }
             if (parameters[i].isAnnotationPresent(StateParameters.class)) {

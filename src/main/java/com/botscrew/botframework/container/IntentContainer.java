@@ -28,7 +28,7 @@ public class IntentContainer extends AbstractContainer {
         this.intentMethodGroup = intentMethodGroup;
     }
 
-    public void process(ChatUser user, String intent, Map<String, Object> params) {
+    public void process(ChatUser user, String intent, Map<Class, Object> params) {
         IntentMethodKey key = new IntentMethodKey(user.getState(), intent);
         Optional<IntentInstanceMethod> instanceMethod = intentMethodGroup.find(key);
 
@@ -39,16 +39,18 @@ public class IntentContainer extends AbstractContainer {
         tryInvokeMethod(instanceMethod.get(), user, params);
     }
 
-    private void tryInvokeMethod(AbstractMethod instanceMethod, ChatUser user, Map<String, Object> params) {
+    private void tryInvokeMethod(AbstractMethod instanceMethod, ChatUser user, Map<Class, Object> params) {
         try {
-            instanceMethod.getMethod().invoke(instanceMethod.getInstance(), getParams(instanceMethod, user, params));
+            Object instance = instanceMethod.getInstance();
+            Object[] args = getArgs(instanceMethod, user, params);
+            instanceMethod.getMethod().invoke(instance, args);
         }
         catch (IllegalAccessException | InvocationTargetException e) {
             throw new ProcessorInnerException("Cannot process instance method", e);
         }
     }
 
-    private Object[] getParams(AbstractMethod instanceMethod, ChatUser user, Map<String, Object> params) {
+    private Object[] getArgs(AbstractMethod instanceMethod, ChatUser user, Map<Class, Object> params) {
         List<Argument> arguments = instanceMethod.getArguments();
         Object[] result = new Object[arguments.size()];
 
@@ -60,9 +62,6 @@ public class IntentContainer extends AbstractContainer {
             switch (argument.getType()) {
                 case USER:
                     result[i] = convertUser(user, argument.getParameter());
-                    break;
-                case NLP_PARAMS:
-                    result[i] = params;
                     break;
                 case STATE_PARAMETERS:
                     result[i] = stateParameters;
@@ -89,7 +88,7 @@ public class IntentContainer extends AbstractContainer {
                     result[i] = Double.valueOf(stateParameters.get(argument.getName()));
                     break;
                 default:
-                    result[i] = null;
+                    result[i] = params.get(argument.getParameter().getType());
             }
         }
         return result;

@@ -1,6 +1,7 @@
 package com.botscrew.botframework.model;
 
 public enum ArgumentType {
+
 	USER,
 	STATE_PARAMETERS,
 	POSTBACK,
@@ -14,5 +15,7 @@ public enum ArgumentType {
 	PARAM_SHORT,
 	PARAM_FLOAT,
 	PARAM_DOUBLE,
-    NLP_PARAMS, UNKNOWN, PARAM_LONG
+	PARAM_LONG,
+
+	UNKNOWN
 }
