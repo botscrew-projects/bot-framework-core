@@ -7,12 +7,12 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostbackContainerBPP implements BeanPostProcessor {
+public class ChatEventsAnnotationBPP implements BeanPostProcessor {
 
     private List<AbstractContainer> containers;
     private List<Object> messagingEventsProcessors;
 
-    public PostbackContainerBPP() {
+    public ChatEventsAnnotationBPP() {
         messagingEventsProcessors = new ArrayList<>();
         this.containers = new ArrayList<>();
     }

@@ -3,11 +3,16 @@ package com.botscrew.botframework.container;
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.model.IntentInstanceMethod;
 import com.botscrew.botframework.model.IntentMethodKey;
+import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class IntentMethodGroup {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntentMethodGroup.class);
+
     public static final String ALL_INTENTS = "ALL_INTENTS";
     public static final String ALL_STATES = "ALL_STATES";
 
@@ -33,6 +38,7 @@ public class IntentMethodGroup {
 
             for (IntentMethodKey key : keys) {
                 instanceMethods.put(key, instanceMethod);
+                LOGGER.info("Intent key added: " + key.toString());
             }
         }
     }

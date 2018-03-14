@@ -5,7 +5,7 @@
 
 	<groupId>com.botscrew</groupId>
 	<artifactId>bot-framework-spring-boot-starter</artifactId>
-	<version>1.0.0-SNAPSHOT-2</version>
+	<version>1.0.0-SNAPSHOT-3</version>
 	<packaging>jar</packaging>
 
 	<name>BotFramework</name>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -36,50 +36,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-	<finalName>bot-framework-spring-boot-starter</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>exec</id>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<classifier>exec</classifier>
-						</configuration>
-					</execution>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<forceCreation>true</forceCreation>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-	
-		</plugins>
-
-	</build>
-		<!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>myMavenRepo.write</id>-->
-            <!--<url>https://mymavenrepo.com/repo/UDnClpYBvzJK2pEcUW8m/</url>-->
-        <!--</repository>-->
-        <!--<snapshotRepository>-->
-            <!--<id>myMavenRepo.write</id>-->
-            <!--<url>https://mymavenrepo.com/repo/UDnClpYBvzJK2pEcUW8m/</url>-->
-        <!--</snapshotRepository>-->
-    <!--</distributionManagement>-->
 </project>

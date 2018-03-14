@@ -1,9 +1,8 @@
 package com.botscrew.botframework.configuration;
 
-import com.botscrew.botframework.configuration.bpp.PostbackContainerBPP;
-import com.botscrew.botframework.container.LocationContainer;
-import com.botscrew.botframework.container.PostbackContainer;
-import com.botscrew.botframework.container.TextContainer;
+import com.botscrew.botframework.configuration.bpp.ChatEventsAnnotationBPP;
+import com.botscrew.botframework.configuration.bpp.IntentProcessorAnnotationBPP;
+import com.botscrew.botframework.container.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,8 +10,13 @@ import org.springframework.context.annotation.Configuration;
 public class BotFrameworkConfiguration {
 
     @Bean
-    public PostbackContainerBPP postbackContainerBPP() {
-        return new PostbackContainerBPP();
+    public ChatEventsAnnotationBPP postbackContainerBPP() {
+        return new ChatEventsAnnotationBPP();
+    }
+
+    @Bean
+    public IntentProcessorAnnotationBPP intentProcessorAnnotationBPP() {
+        return new IntentProcessorAnnotationBPP();
     }
 
     @Bean
@@ -28,5 +32,15 @@ public class BotFrameworkConfiguration {
     @Bean
     public LocationContainer locationContainer() {
         return new LocationContainer();
+    }
+
+    @Bean
+    public IntentMethodGroup intentMethodGroup() {
+        return new IntentMethodGroup();
+    }
+
+    @Bean
+    public IntentContainer intentContainer(IntentMethodGroup intentMethodGroup) {
+        return new IntentContainer(intentMethodGroup);
     }
 }

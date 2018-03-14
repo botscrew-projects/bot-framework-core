@@ -33,4 +33,12 @@ public class IntentMethodKey {
     public int hashCode() {
         return Objects.hash(state, intent);
     }
+
+    @Override
+    public String toString() {
+        return "IntentMethodKey{" +
+                "state='" + state + '\'' +
+                ", intent='" + intent + '\'' +
+                '}';
+    }
 }
