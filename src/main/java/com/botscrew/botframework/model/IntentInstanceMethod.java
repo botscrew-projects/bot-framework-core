@@ -17,27 +17,27 @@ public class IntentInstanceMethod extends AbstractMethod {
 
     protected void buildArguments() {
         Parameter[] parameters = getMethod().getParameters();
-        Argument[] arguments = new Argument[parameters.length];
+        CompositeParameter[] compositeParameters = new CompositeParameter[parameters.length];
 
         for (int i = 0; i < parameters.length; i++) {
             if (ChatUser.class.isAssignableFrom(parameters[i].getType())) {
-                arguments[i] = new Argument(ArgumentType.USER, parameters[i]);
+                compositeParameters[i] = new CompositeParameter(ArgumentType.USER, parameters[i]);
                 continue;
             }
             if (parameters[i].isAnnotationPresent(StateParameters.class)) {
-                arguments[i] = new Argument(ArgumentType.STATE_PARAMETERS, parameters[i]);
+                compositeParameters[i] = new CompositeParameter(ArgumentType.STATE_PARAMETERS, parameters[i]);
                 continue;
             }
 
             Optional<ArgumentType> baseTypeOpt = getBaseTypeArgumentByClass(parameters[i].getType());
             if (baseTypeOpt.isPresent()) {
-                arguments[i] = new Argument(baseTypeOpt.get(), parameters[i]);
+                compositeParameters[i] = new CompositeParameter(baseTypeOpt.get(), parameters[i]);
             }
             else {
-                arguments[i] = new Argument(ArgumentType.UNKNOWN, parameters[i]);
+                compositeParameters[i] = new CompositeParameter(ArgumentType.UNKNOWN, parameters[i]);
             }
         }
 
-        this.arguments = Arrays.asList(arguments);
+        this.compositeParameters = Arrays.asList(compositeParameters);
     }
 }

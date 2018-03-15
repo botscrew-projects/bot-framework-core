@@ -51,44 +51,44 @@ public class IntentContainer extends AbstractContainer {
     }
 
     private Object[] getArgs(AbstractMethod instanceMethod, ChatUser user, Map<Class, Object> params) {
-        List<Argument> arguments = instanceMethod.getArguments();
-        Object[] result = new Object[arguments.size()];
+        List<CompositeParameter> compositeParameters = instanceMethod.getCompositeParameters();
+        Object[] result = new Object[compositeParameters.size()];
 
         Map<String, String> stateParameters = ParametersUtils.getParameters(user.getState(), spliterator);
 
-        for (int i = 0; i < arguments.size(); i++) {
-            Argument argument = arguments.get(i);
+        for (int i = 0; i < compositeParameters.size(); i++) {
+            CompositeParameter compositeParameter = compositeParameters.get(i);
 
-            switch (argument.getType()) {
+            switch (compositeParameter.getType()) {
                 case USER:
-                    result[i] = convertUser(user, argument.getParameter());
+                    result[i] = convertUser(user, compositeParameter.getParameter());
                     break;
                 case STATE_PARAMETERS:
                     result[i] = stateParameters;
                     break;
                 case PARAM_STRING:
-                    result[i] = stateParameters.get(argument.getName());
+                    result[i] = stateParameters.get(compositeParameter.getName());
                     break;
                 case PARAM_INTEGER:
-                    result[i] = Integer.valueOf(stateParameters.get(argument.getName()));
+                    result[i] = Integer.valueOf(stateParameters.get(compositeParameter.getName()));
                     break;
                 case PARAM_LONG:
-                    result[i] = Long.valueOf(stateParameters.get(argument.getName()));
+                    result[i] = Long.valueOf(stateParameters.get(compositeParameter.getName()));
                     break;
                 case PARAM_BYTE:
-                    result[i] = Byte.valueOf(stateParameters.get(argument.getName()));
+                    result[i] = Byte.valueOf(stateParameters.get(compositeParameter.getName()));
                     break;
                 case PARAM_SHORT:
-                    result[i] = Short.valueOf(stateParameters.get(argument.getName()));
+                    result[i] = Short.valueOf(stateParameters.get(compositeParameter.getName()));
                     break;
                 case PARAM_FLOAT:
-                    result[i] = Float.valueOf(stateParameters.get(argument.getName()));
+                    result[i] = Float.valueOf(stateParameters.get(compositeParameter.getName()));
                     break;
                 case PARAM_DOUBLE:
-                    result[i] = Double.valueOf(stateParameters.get(argument.getName()));
+                    result[i] = Double.valueOf(stateParameters.get(compositeParameter.getName()));
                     break;
                 default:
-                    result[i] = params.get(argument.getParameter().getType());
+                    result[i] = params.get(compositeParameter.getParameter().getType());
             }
         }
         return result;

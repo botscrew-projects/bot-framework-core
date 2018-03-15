@@ -1,7 +1,6 @@
 package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.annotation.Intent;
-import com.botscrew.botframework.annotation.NlpParameters;
 import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.annotation.StateParameters;
 import com.botscrew.botframework.model.ChatUser;
@@ -99,7 +98,7 @@ public class IntentContainerTests {
 
     private class IntentWithParams {
         @Intent
-        public void intentWithParams(@NlpParameters Map<String, Object> p) {
+        public void intentWithParams(Map<String, Object> p) {
             called = true;
             params = new Object[1];
             params[0] = p;

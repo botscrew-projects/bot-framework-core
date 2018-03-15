@@ -7,7 +7,7 @@ import java.util.List;
 public class InstanceMethod {
 	private Object instance;
 	private Method method;
-	private List<Argument> arguments;
+	private List<CompositeParameter> compositeParameters;
 	private List<ArgumentType> argumentTypes;
 	private List<Parameter> parameters;
 
@@ -44,7 +44,7 @@ public class InstanceMethod {
 		return parameters;
 	}
 
-	public List<Argument> getArguments() {
-		return arguments;
+	public List<CompositeParameter> getCompositeParameters() {
+		return compositeParameters;
 	}
 }

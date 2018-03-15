@@ -10,7 +10,7 @@ public abstract class AbstractMethod {
 
     private Object instance;
     private Method method;
-    protected List<Argument> arguments;
+    protected List<CompositeParameter> compositeParameters;
 
     private static final Map<Class, ArgumentType> supportedBaseTypes;
 
@@ -49,7 +49,7 @@ public abstract class AbstractMethod {
         return method;
     }
 
-    public List<Argument> getArguments() {
-        return arguments;
+    public List<CompositeParameter> getCompositeParameters() {
+        return compositeParameters;
     }
 }
