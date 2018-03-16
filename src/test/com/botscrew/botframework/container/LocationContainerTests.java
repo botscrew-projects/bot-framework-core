@@ -1,7 +1,6 @@
 package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.container.domain.LocationHandlerImpl;
-import com.botscrew.botframework.container.domain.TextHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
 import com.botscrew.botframework.model.ChatUser;
 import com.botscrew.botframework.model.GeoCoordinates;

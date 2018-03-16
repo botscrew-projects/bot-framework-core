@@ -1,7 +1,6 @@
 package com.botscrew.botframework.domain;
 
 import com.botscrew.botframework.model.ArgumentType;
-import com.botscrew.botframework.model.ArgumentWrapper;
 
 import java.util.EnumMap;
 import java.util.HashMap;

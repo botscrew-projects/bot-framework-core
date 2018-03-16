@@ -3,8 +3,14 @@ package com.botscrew.botframework.container;
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.annotation.StateParameters;
+import com.botscrew.botframework.domain.ArgumentsComposerFactory;
+import com.botscrew.botframework.domain.DefaultArgumentKit;
+import com.botscrew.botframework.domain.converter.StringToDoubleConverter;
+import com.botscrew.botframework.domain.converter.impl.StringToIntegerConverter;
+import com.botscrew.botframework.domain.converter.impl.UserConverter;
 import com.botscrew.botframework.model.ChatUser;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -20,6 +26,13 @@ public class IntentContainerTests {
     private boolean called;
     private Object[] params;
 
+    @BeforeClass
+    public static void before() {
+        ArgumentsComposerFactory.putConverter(new StringToIntegerConverter());
+        ArgumentsComposerFactory.putConverter(new StringToDoubleConverter());
+        ArgumentsComposerFactory.putConverter(new UserConverter());
+    }
+
     @Before
     public void beforeEach() {
         intentMethodGroup = new IntentMethodGroup();
@@ -33,14 +46,14 @@ public class IntentContainerTests {
         ChatUser user = () -> "default";
         String intent = "intent";
 
-        intentContainer.process(user, intent, new HashMap<>());
+        intentContainer.process(user, intent, new DefaultArgumentKit());
     }
 
     @Test
     public void shouldProcessDefaultRegisteredMethod() throws Exception {
         intentMethodGroup.register(new DefaultIntentHandler());
 
-        intentContainer.process(() -> "default", "intent", new HashMap<>());
+        intentContainer.process(() -> "default", "intent", new DefaultArgumentKit());
 
         assertTrue(called);
     }
@@ -59,7 +72,7 @@ public class IntentContainerTests {
         intentMethodGroup.register(new DefaultIntentHandlerWithUser());
 
         MyUser user = new MyUser();
-        intentContainer.process(user, "intent", new HashMap<>());
+        intentContainer.process(user, "intent", new DefaultArgumentKit());
 
         assertTrue(called);
         assertEquals(user, params[0]);
@@ -81,27 +94,6 @@ public class IntentContainerTests {
         @Override
         public String getState() {
             return "default";
-        }
-    }
-
-    @Test
-    public void shouldPassNlpParamsToMethod() throws Exception {
-        intentMethodGroup.register(new IntentWithParams());
-
-        Map<Class, Object> parameters = new HashMap<>();
-        parameters.put(Object.class, new Object());
-
-        intentContainer.process(new MyUser(), "intent", parameters);
-
-        assertEquals(params[0], parameters);
-    }
-
-    private class IntentWithParams {
-        @Intent
-        public void intentWithParams(Map<String, Object> p) {
-            called = true;
-            params = new Object[1];
-            params[0] = p;
         }
     }
 
@@ -238,8 +230,7 @@ public class IntentContainerTests {
     @Test
     public void shouldPassDoubleStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithDoubleParam());
-
-        intentContainer.process(() -> "default?param=1.0", "intent", null);
+        intentContainer.process(() -> "default?param=1.0", "intent", new DefaultArgumentKit());
 
         double expected = 1.0d;
         assertEquals(expected, params[0]);

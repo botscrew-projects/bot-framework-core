@@ -6,15 +6,19 @@ import java.lang.reflect.Parameter;
 
 public class CompositeParameter {
     private final ArgumentType type;
-    private final Parameter parameter;
+    private final Parameter originalParameter;
     private final boolean hasName;
     private final String name;
 
     public CompositeParameter(ArgumentType type, Parameter parameter) {
         this.type = type;
-        this.parameter = parameter;
+        this.originalParameter = parameter;
         this.hasName = detectIfNameIsPresent(parameter);
         this.name = detectName(parameter);
+    }
+
+    public Class getOriginalType() {
+        return this.originalParameter.getType();
     }
 
     public boolean hasName() {
@@ -40,7 +44,7 @@ public class CompositeParameter {
         return type;
     }
 
-    public Parameter getParameter() {
-        return parameter;
+    public Parameter getOriginalParameter() {
+        return originalParameter;
     }
 }

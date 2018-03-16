@@ -1,19 +1,24 @@
 package com.botscrew.botframework.domain;
 
+import com.botscrew.botframework.domain.converter.ArgumentConverter;
+import com.botscrew.botframework.domain.converter.ConverterKey;
+import com.botscrew.botframework.exception.ProcessorInnerException;
 import com.botscrew.botframework.model.CompositeParameter;
 
-import java.lang.reflect.Parameter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ArgumentsComposer {
     private final List<CompositeParameter> parameters;
+    private final Map<ConverterKey, ArgumentConverter> converters;
 
-    public ArgumentsComposer(List<CompositeParameter> parameters) {
+    public ArgumentsComposer(List<CompositeParameter> parameters, Map<ConverterKey, ArgumentConverter> converters) {
         this.parameters = parameters;
+        this.converters = converters;
     }
 
-    Object[] compose(ArgumentKit kit) {
+    public Object[] compose(ArgumentKit kit) {
         Object[] result = new Object[parameters.size()];
 
         for (int i = 0; i < parameters.size(); i++) {
@@ -27,18 +32,26 @@ public class ArgumentsComposer {
             }
 
             if (wrapperOpt.isPresent()) {
-                result[i] = convertIfNeededAndReturn(wrapperOpt.get());
+                result[i] = convertIfNeededAndReturn(param, wrapperOpt.get());
             }
             else {
                 result[i] = null;
             }
         }
+
+        return result;
     }
 
-    private Object convertIfNeededAndReturn(Parameter parameter, ArgumentWrapper argumentWrapper) {
+    private Object convertIfNeededAndReturn(CompositeParameter parameter, ArgumentWrapper argumentWrapper) {
         Object value = argumentWrapper.getValue();
-        if (parameter.getType().equals(value.getClass())) return value;
+        if (parameter.getOriginalType().equals(value.getClass())) return value;
 
+        ArgumentConverter argumentConverter = converters.get(ConverterKey.of(value.getClass(), parameter.getType()));
+        if (argumentConverter == null) {
+            throw new ProcessorInnerException("Cannot convert type: " + value.getClass().toString() +
+                    " to: " + parameter.getOriginalType().toString());
+        }
 
+        return argumentConverter.convert(value, parameter.getOriginalType());
     }
 }

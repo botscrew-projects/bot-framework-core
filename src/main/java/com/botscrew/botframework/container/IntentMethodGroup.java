@@ -3,7 +3,6 @@ package com.botscrew.botframework.container;
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.model.IntentInstanceMethod;
 import com.botscrew.botframework.model.IntentMethodKey;
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ public class IntentMethodGroup {
 
             for (IntentMethodKey key : keys) {
                 instanceMethods.put(key, instanceMethod);
-                LOGGER.info("Intent key added: " + key.toString());
+                LOGGER.info("Intent key added: {}", key);
             }
         }
     }

@@ -2,7 +2,6 @@ package com.botscrew.botframework.container.domain;
 
 import com.botscrew.botframework.annotation.Location;
 import com.botscrew.botframework.annotation.Param;
-import com.botscrew.botframework.annotation.Text;
 import com.botscrew.botframework.model.GeoCoordinates;
 
 public class LocationHandlerImpl extends Followable {

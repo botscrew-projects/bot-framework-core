@@ -3,7 +3,6 @@ package com.botscrew.botframework.container.domain;
 import com.botscrew.botframework.annotation.ChatEventsProcessor;
 import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.annotation.Postback;
-import com.botscrew.botframework.annotation.Text;
 
 @ChatEventsProcessor
 public class PostbackHandlerImpl extends Followable {

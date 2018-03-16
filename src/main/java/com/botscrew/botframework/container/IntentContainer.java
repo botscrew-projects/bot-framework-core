@@ -1,18 +1,19 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.domain.ArgumentKit;
+import com.botscrew.botframework.domain.DefaultArgumentKit;
+import com.botscrew.botframework.domain.SimpleArgumentWrapper;
 import com.botscrew.botframework.exception.ProcessorInnerException;
 import com.botscrew.botframework.model.*;
 import com.botscrew.botframework.util.ParametersUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class IntentContainer extends AbstractContainer {
     private final IntentMethodGroup intentMethodGroup;
-
     @Override
     public void register(Object object) {
         // TODO: 11.03.18 remove
@@ -28,7 +29,7 @@ public class IntentContainer extends AbstractContainer {
         this.intentMethodGroup = intentMethodGroup;
     }
 
-    public void process(ChatUser user, String intent, Map<Class, Object> params) {
+    public void process(ChatUser user, String intent, ArgumentKit originalKit) {
         IntentMethodKey key = new IntentMethodKey(user.getState(), intent);
         Optional<IntentInstanceMethod> instanceMethod = intentMethodGroup.find(key);
 
@@ -36,62 +37,25 @@ public class IntentContainer extends AbstractContainer {
             throw new IllegalArgumentException("No eligible method found for state: " + user.getState() + " and intent: " + intent);
         }
 
-        tryInvokeMethod(instanceMethod.get(), user, params);
+        originalKit.put(ArgumentType.USER, new SimpleArgumentWrapper(user));
+        Map<String, String> parameters = ParametersUtils.getParameters(user.getState(), spliterator);
+
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
+        }
+
+        tryInvokeMethod(instanceMethod.get(), originalKit);
     }
 
-    private void tryInvokeMethod(AbstractMethod instanceMethod, ChatUser user, Map<Class, Object> params) {
+    private void tryInvokeMethod(AbstractMethod instanceMethod, ArgumentKit kit) {
         try {
             Object instance = instanceMethod.getInstance();
-            Object[] args = getArgs(instanceMethod, user, params);
+            Object[] args = instanceMethod.composeArgs(kit);
             instanceMethod.getMethod().invoke(instance, args);
         }
         catch (IllegalAccessException | InvocationTargetException e) {
             throw new ProcessorInnerException("Cannot process instance method", e);
         }
-    }
-
-    private Object[] getArgs(AbstractMethod instanceMethod, ChatUser user, Map<Class, Object> params) {
-        List<CompositeParameter> compositeParameters = instanceMethod.getCompositeParameters();
-        Object[] result = new Object[compositeParameters.size()];
-
-        Map<String, String> stateParameters = ParametersUtils.getParameters(user.getState(), spliterator);
-
-        for (int i = 0; i < compositeParameters.size(); i++) {
-            CompositeParameter compositeParameter = compositeParameters.get(i);
-
-            switch (compositeParameter.getType()) {
-                case USER:
-                    result[i] = convertUser(user, compositeParameter.getParameter());
-                    break;
-                case STATE_PARAMETERS:
-                    result[i] = stateParameters;
-                    break;
-                case PARAM_STRING:
-                    result[i] = stateParameters.get(compositeParameter.getName());
-                    break;
-                case PARAM_INTEGER:
-                    result[i] = Integer.valueOf(stateParameters.get(compositeParameter.getName()));
-                    break;
-                case PARAM_LONG:
-                    result[i] = Long.valueOf(stateParameters.get(compositeParameter.getName()));
-                    break;
-                case PARAM_BYTE:
-                    result[i] = Byte.valueOf(stateParameters.get(compositeParameter.getName()));
-                    break;
-                case PARAM_SHORT:
-                    result[i] = Short.valueOf(stateParameters.get(compositeParameter.getName()));
-                    break;
-                case PARAM_FLOAT:
-                    result[i] = Float.valueOf(stateParameters.get(compositeParameter.getName()));
-                    break;
-                case PARAM_DOUBLE:
-                    result[i] = Double.valueOf(stateParameters.get(compositeParameter.getName()));
-                    break;
-                default:
-                    result[i] = params.get(compositeParameter.getParameter().getType());
-            }
-        }
-        return result;
     }
 
 }

@@ -3,10 +3,6 @@ package com.botscrew.botframework.container.domain;
 import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.annotation.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 public class TextHandlerImpl extends Followable {
 
     @Text

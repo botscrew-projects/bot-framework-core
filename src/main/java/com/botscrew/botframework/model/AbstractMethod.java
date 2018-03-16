@@ -1,5 +1,9 @@
 package com.botscrew.botframework.model;
 
+import com.botscrew.botframework.domain.ArgumentKit;
+import com.botscrew.botframework.domain.ArgumentsComposer;
+import com.botscrew.botframework.domain.ArgumentsComposerFactory;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +14,7 @@ public abstract class AbstractMethod {
 
     private Object instance;
     private Method method;
+    private ArgumentsComposer argumentsComposer;
     protected List<CompositeParameter> compositeParameters;
 
     private static final Map<Class, ArgumentType> supportedBaseTypes;
@@ -32,14 +37,19 @@ public abstract class AbstractMethod {
         this.instance = instance;
         this.method = method;
 
-        buildArguments();
+        buildCompositeParameters();
+        argumentsComposer = ArgumentsComposerFactory.create(getCompositeParameters());
+    }
+
+    public Object[] composeArgs(ArgumentKit kit) {
+        return argumentsComposer.compose(kit);
     }
 
     Optional<ArgumentType> getBaseTypeArgumentByClass(Class<?> type) {
         return Optional.ofNullable(supportedBaseTypes.get(type));
     }
 
-    protected abstract void buildArguments();
+    protected abstract void buildCompositeParameters();
 
     public Object getInstance() {
         return instance;

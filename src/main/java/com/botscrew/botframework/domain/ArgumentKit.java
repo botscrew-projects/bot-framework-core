@@ -1,7 +1,6 @@
 package com.botscrew.botframework.domain;
 
 import com.botscrew.botframework.model.ArgumentType;
-import com.botscrew.botframework.model.ArgumentWrapper;
 
 import java.util.Optional;
 
@@ -13,5 +12,4 @@ public interface ArgumentKit {
 
     Optional<ArgumentWrapper> get(String name);
     Optional<ArgumentWrapper> get(ArgumentType type);
-
 }

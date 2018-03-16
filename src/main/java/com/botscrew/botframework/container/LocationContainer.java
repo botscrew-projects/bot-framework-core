@@ -1,5 +1,15 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.annotation.Location;
+import com.botscrew.botframework.exception.DuplicatedActionException;
+import com.botscrew.botframework.exception.ProcessorInnerException;
+import com.botscrew.botframework.exception.WrongMethodSignatureException;
+import com.botscrew.botframework.model.ArgumentType;
+import com.botscrew.botframework.model.ChatUser;
+import com.botscrew.botframework.model.GeoCoordinates;
+import com.botscrew.botframework.model.InstanceMethod;
+import com.botscrew.botframework.util.ParametersUtils;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -9,16 +19,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import com.botscrew.botframework.annotation.Location;
-import com.botscrew.botframework.exception.DuplicatedActionException;
-import com.botscrew.botframework.exception.ProcessorInnerException;
-import com.botscrew.botframework.exception.WrongMethodSignatureException;
-import com.botscrew.botframework.model.ArgumentType;
-import com.botscrew.botframework.model.GeoCoordinates;
-import com.botscrew.botframework.model.InstanceMethod;
-import com.botscrew.botframework.util.ParametersUtils;
-import com.botscrew.botframework.model.ChatUser;
 
 public class LocationContainer extends AbstractContainer {
 

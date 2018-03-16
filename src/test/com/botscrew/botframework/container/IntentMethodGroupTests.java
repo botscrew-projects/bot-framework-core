@@ -2,7 +2,6 @@ package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.model.ChatUser;
-import com.botscrew.botframework.model.InstanceMethod;
 import com.botscrew.botframework.model.IntentInstanceMethod;
 import com.botscrew.botframework.model.IntentMethodKey;
 import org.junit.Before;

@@ -3,7 +3,6 @@ package com.botscrew.botframework.model;
 
 import com.botscrew.botframework.annotation.StateParameters;
 
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -15,7 +14,7 @@ public class IntentInstanceMethod extends AbstractMethod {
         super(instance, method);
     }
 
-    protected void buildArguments() {
+    protected void buildCompositeParameters() {
         Parameter[] parameters = getMethod().getParameters();
         CompositeParameter[] compositeParameters = new CompositeParameter[parameters.length];
 
