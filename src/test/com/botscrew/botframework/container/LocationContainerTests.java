@@ -1,9 +1,14 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.container.domain.GeoCoordinates;
 import com.botscrew.botframework.container.domain.LocationHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
+import com.botscrew.botframework.domain.ArgumentKit;
+import com.botscrew.botframework.domain.SimpleArgumentKit;
+import com.botscrew.botframework.domain.SimpleArgumentWrapper;
+import com.botscrew.botframework.domain.method.group.LocationHandlingMethodGroup;
+import com.botscrew.botframework.model.ArgumentType;
 import com.botscrew.botframework.model.ChatUser;
-import com.botscrew.botframework.model.GeoCoordinates;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -12,7 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
+import static org.junit.Assert.assertEquals;
+
 public class LocationContainerTests {
 
     @Test
@@ -22,7 +28,7 @@ public class LocationContainerTests {
 
         List<Object> arguments = executeLocation(location, user);
 
-        assert arguments.get(0).equals(location);
+        assertEquals(location, arguments.get(0));
     }
 
     @Test
@@ -129,13 +135,16 @@ public class LocationContainerTests {
     }
 
     private List<Object> executeLocation(GeoCoordinates location, ChatUser user) {
-        LocationContainer textContainer = new LocationContainer();
+        LocationHandlingMethodGroup locationHandlingMethodGroup = new LocationHandlingMethodGroup();
+        LocationContainer locationContainer = new LocationContainer(locationHandlingMethodGroup);
         LocationHandlerImpl handler = new LocationHandlerImpl();
         List<Object> arguments = new ArrayList<>();
         handler.addFollower(args -> arguments.addAll(Arrays.asList(args)));
-        textContainer.register(handler);
+        locationHandlingMethodGroup.register(handler);
 
-        textContainer.processLocation(location, user);
+        ArgumentKit kit = new SimpleArgumentKit();
+        kit.put(ArgumentType.COORDINATES, new SimpleArgumentWrapper(location));
+        locationContainer.process(user, kit);
         return arguments;
     }
 }

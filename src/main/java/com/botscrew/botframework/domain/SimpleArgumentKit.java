@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class DefaultArgumentKit implements ArgumentKit {
+public class SimpleArgumentKit implements ArgumentKit {
 
     private final Map<String, ArgumentWrapper> namedArguments;
     private final Map<ArgumentType, ArgumentWrapper> typedArguments;
 
-    public DefaultArgumentKit() {
+    public SimpleArgumentKit() {
         this.namedArguments = new HashMap<>();
         this.typedArguments = new EnumMap<>(ArgumentType.class);
     }

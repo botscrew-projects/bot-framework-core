@@ -1,9 +1,10 @@
 package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.annotation.Intent;
+import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.key.BiMethodKey;
 import com.botscrew.botframework.model.ChatUser;
-import com.botscrew.botframework.model.IntentInstanceMethod;
-import com.botscrew.botframework.model.IntentMethodKey;
+import com.botscrew.botframework.domain.method.HandlingMethod;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,13 +12,13 @@ import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
 
-public class IntentMethodGroupTests {
+public class IntentHandlingMethodGroupTests {
 
-    private IntentMethodGroup intentMethodGroup;
+    private IntentHandlingMethodGroup intentMethodGroup;
 
     @Before
     public void beforeEach() {
-        intentMethodGroup = new IntentMethodGroup();
+        intentMethodGroup = new IntentHandlingMethodGroup();
     }
 
     @Test
@@ -26,9 +27,9 @@ public class IntentMethodGroupTests {
 
         String state = "state";
         String intent = "default";
-        IntentMethodKey key = new IntentMethodKey(state, intent);
+        BiMethodKey key = new BiMethodKey(state, intent);
 
-        Optional<IntentInstanceMethod> instanceMethod = intentMethodGroup.find(key);
+        Optional<HandlingMethod> instanceMethod = intentMethodGroup.find(key);
 
         assertTrue(instanceMethod.isPresent());
     }
@@ -42,13 +43,13 @@ public class IntentMethodGroupTests {
     public void shouldFirstlyLookForIntentMethod() throws Exception {
         intentMethodGroup.register(new ClassWithIntentAndStateMethod());
 
-        IntentMethodKey key = new IntentMethodKey("STATE1", "INTENT1");
-        Optional<IntentInstanceMethod> instanceMethod = intentMethodGroup.find(key);
+        BiMethodKey key = new BiMethodKey("STATE1", "INTENT1");
+        Optional<HandlingMethod> instanceMethod = intentMethodGroup.find(key);
 
         assertTrue(instanceMethod.isPresent());
 
         Intent annotation = instanceMethod.get().getMethod().getAnnotation(Intent.class);
-        assertTrue(annotation.name().equals("INTENT1"));
+        assertTrue(annotation.value().equals("INTENT1"));
     }
 
     private class ClassWithIntentAndStateMethod {
@@ -56,7 +57,7 @@ public class IntentMethodGroupTests {
         @Intent(states = {"STATE1"})
         public void stateMethod() {}
 
-        @Intent(name = "INTENT1")
+        @Intent("INTENT1")
         public void intentMethod() {}
     }
 }

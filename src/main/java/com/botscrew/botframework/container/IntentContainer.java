@@ -1,61 +1,52 @@
 package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.domain.ArgumentKit;
-import com.botscrew.botframework.domain.DefaultArgumentKit;
+import com.botscrew.botframework.domain.SimpleArgumentKit;
 import com.botscrew.botframework.domain.SimpleArgumentWrapper;
-import com.botscrew.botframework.exception.ProcessorInnerException;
-import com.botscrew.botframework.model.*;
-import com.botscrew.botframework.util.ParametersUtils;
+import com.botscrew.botframework.domain.method.HandlingMethod;
+import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.key.BiMethodKey;
+import com.botscrew.botframework.domain.param.SimpleStringParametersDetector;
+import com.botscrew.botframework.domain.param.StringParametersDetector;
+import com.botscrew.botframework.model.ArgumentType;
+import com.botscrew.botframework.model.ChatUser;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Parameter;
 import java.util.Map;
 import java.util.Optional;
 
 public class IntentContainer extends AbstractContainer {
-    private final IntentMethodGroup intentMethodGroup;
-    @Override
-    public void register(Object object) {
-        // TODO: 11.03.18 remove
-    }
 
-    @Override
-    protected ArgumentType getArgumentType(Parameter parameter) {
-        // TODO: 11.03.18 remove
-        return null;
-    }
+    private final IntentHandlingMethodGroup intentMethodGroup;
+    private final StringParametersDetector stringParametersDetector;
 
-    public IntentContainer(IntentMethodGroup intentMethodGroup) {
+    public IntentContainer(IntentHandlingMethodGroup intentMethodGroup) {
+        stringParametersDetector = new SimpleStringParametersDetector();
         this.intentMethodGroup = intentMethodGroup;
     }
 
+    public IntentContainer(IntentHandlingMethodGroup intentMethodGroup, StringParametersDetector stringParametersDetector) {
+        this.intentMethodGroup = intentMethodGroup;
+        this.stringParametersDetector = stringParametersDetector;
+    }
+
     public void process(ChatUser user, String intent, ArgumentKit originalKit) {
-        IntentMethodKey key = new IntentMethodKey(user.getState(), intent);
-        Optional<IntentInstanceMethod> instanceMethod = intentMethodGroup.find(key);
+        if (originalKit == null) originalKit = new SimpleArgumentKit();
+
+        BiMethodKey key = new BiMethodKey(user.getState(), intent);
+        Optional<HandlingMethod> instanceMethod = intentMethodGroup.find(key);
 
         if (!instanceMethod.isPresent()) {
             throw new IllegalArgumentException("No eligible method found for state: " + user.getState() + " and intent: " + intent);
         }
+        Map<String, String> stateParameters = stringParametersDetector.getParameters(user.getState());
 
         originalKit.put(ArgumentType.USER, new SimpleArgumentWrapper(user));
-        Map<String, String> parameters = ParametersUtils.getParameters(user.getState(), spliterator);
-
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+        originalKit.put(ArgumentType.STATE_PARAMETERS, new SimpleArgumentWrapper(stateParameters));
+        for (Map.Entry<String, String> entry : stateParameters.entrySet()) {
             originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }
 
         tryInvokeMethod(instanceMethod.get(), originalKit);
-    }
-
-    private void tryInvokeMethod(AbstractMethod instanceMethod, ArgumentKit kit) {
-        try {
-            Object instance = instanceMethod.getInstance();
-            Object[] args = instanceMethod.composeArgs(kit);
-            instanceMethod.getMethod().invoke(instance, args);
-        }
-        catch (IllegalAccessException | InvocationTargetException e) {
-            throw new ProcessorInnerException("Cannot process instance method", e);
-        }
     }
 
 }

@@ -1,44 +1,44 @@
-package com.botscrew.botframework.model;
+package com.botscrew.botframework.domain.method.key;
 
 import java.util.Objects;
 
-public class IntentMethodKey {
+public class BiMethodKey {
 
     private final String state;
-    private final String intent;
+    private final String stringKey;
 
-    public IntentMethodKey(String state, String intent) {
+    public BiMethodKey(String state, String stringKey) {
         this.state = state;
-        this.intent = intent;
+        this.stringKey = stringKey;
     }
 
     public String getState() {
         return state;
     }
 
-    public String getIntent() {
-        return intent;
+    public String getStringKey() {
+        return stringKey;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IntentMethodKey that = (IntentMethodKey) o;
+        BiMethodKey that = (BiMethodKey) o;
         return Objects.equals(state, that.state) &&
-                Objects.equals(intent, that.intent);
+                Objects.equals(stringKey, that.stringKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state, intent);
+        return Objects.hash(state, stringKey);
     }
 
     @Override
     public String toString() {
-        return "IntentMethodKey{" +
+        return "BiMethodKey{" +
                 "state='" + state + '\'' +
-                ", intent='" + intent + '\'' +
+                ", stringKey='" + stringKey + '\'' +
                 '}';
     }
 }

@@ -2,6 +2,8 @@ package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.container.domain.PostbackHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
+import com.botscrew.botframework.domain.SimpleArgumentKit;
+import com.botscrew.botframework.domain.method.group.PostbackHandlingMethodGroup;
 import com.botscrew.botframework.model.ChatUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 public class PostbackContainerTests {
 
     @Test
@@ -135,13 +136,14 @@ public class PostbackContainerTests {
     }
 
     private List<Object> executePostback(String postback, ChatUser user) {
-        PostbackContainer textContainer = new PostbackContainer();
+        PostbackHandlingMethodGroup postbackHandlingMethodGroup = new PostbackHandlingMethodGroup();
+        PostbackContainer textContainer = new PostbackContainer(postbackHandlingMethodGroup);
         PostbackHandlerImpl handler = new PostbackHandlerImpl();
         List<Object> arguments = new ArrayList<>();
         handler.addFollower(args -> arguments.addAll(Arrays.asList(args)));
-        textContainer.register(handler);
+        postbackHandlingMethodGroup.register(handler);
 
-        textContainer.processPostback(postback, user);
+        textContainer.process(user, postback, new SimpleArgumentKit());
         return arguments;
     }
 }

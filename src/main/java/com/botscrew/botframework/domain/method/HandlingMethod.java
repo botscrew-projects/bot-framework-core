@@ -1,21 +1,21 @@
-package com.botscrew.botframework.model;
+package com.botscrew.botframework.domain.method;
 
 import com.botscrew.botframework.domain.ArgumentKit;
 import com.botscrew.botframework.domain.ArgumentsComposer;
 import com.botscrew.botframework.domain.ArgumentsComposerFactory;
+import com.botscrew.botframework.model.ArgumentType;
+import com.botscrew.botframework.model.CompositeParameter;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.lang.reflect.Parameter;
+import java.util.*;
 
-public abstract class AbstractMethod {
+public abstract class HandlingMethod {
 
     private Object instance;
     private Method method;
     private ArgumentsComposer argumentsComposer;
-    protected List<CompositeParameter> compositeParameters;
+    private List<CompositeParameter> compositeParameters;
 
     private static final Map<Class, ArgumentType> supportedBaseTypes;
 
@@ -31,25 +31,36 @@ public abstract class AbstractMethod {
         supportedBaseTypes.put(String.class, ArgumentType.PARAM_STRING);
     }
 
-    private AbstractMethod() {}
+    private HandlingMethod() {}
 
-    public AbstractMethod(Object instance, Method method) {
+    public HandlingMethod(Object instance, Method method) {
         this.instance = instance;
         this.method = method;
 
         buildCompositeParameters();
-        argumentsComposer = ArgumentsComposerFactory.create(getCompositeParameters());
+        argumentsComposer = ArgumentsComposerFactory.create(this.getCompositeParameters());
     }
 
     public Object[] composeArgs(ArgumentKit kit) {
         return argumentsComposer.compose(kit);
     }
 
+    private void buildCompositeParameters() {
+        Parameter[] parameters = getMethod().getParameters();
+        CompositeParameter[] compositeParams = new CompositeParameter[parameters.length];
+
+        for (int i = 0; i < parameters.length; i++) {
+            compositeParams[i] = createCompositeParameter(parameters[i]);
+        }
+
+        this.compositeParameters = Arrays.asList(compositeParams);
+    }
+
+    protected abstract CompositeParameter createCompositeParameter(Parameter parameter);
+
     Optional<ArgumentType> getBaseTypeArgumentByClass(Class<?> type) {
         return Optional.ofNullable(supportedBaseTypes.get(type));
     }
-
-    protected abstract void buildCompositeParameters();
 
     public Object getInstance() {
         return instance;

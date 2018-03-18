@@ -2,6 +2,10 @@ package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.container.domain.TextHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
+import com.botscrew.botframework.domain.SimpleArgumentKit;
+import com.botscrew.botframework.domain.SimpleArgumentWrapper;
+import com.botscrew.botframework.domain.method.group.TextHandlingMethodGroup;
+import com.botscrew.botframework.model.ArgumentType;
 import com.botscrew.botframework.model.ChatUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringRunner.class)
+
 public class TextContainerTests {
 
     @Test
@@ -107,7 +112,7 @@ public class TextContainerTests {
 
         List<Object> arguments = executeText("text", user);
 
-        assert arguments.get(1).equals(paramValue);
+        assertEquals(paramValue, arguments.get(1));
     }
 
     @Test
@@ -123,13 +128,17 @@ public class TextContainerTests {
     }
 
     private List<Object> executeText(String text, ChatUser user) {
-        TextContainer textContainer = new TextContainer();
+        TextHandlingMethodGroup textHandlingMethodGroup = new TextHandlingMethodGroup();
+        TextContainer textContainer = new TextContainer(textHandlingMethodGroup);
         TextHandlerImpl textHandler = new TextHandlerImpl();
         List<Object> arguments = new ArrayList<>();
         textHandler.addFollower(args -> arguments.addAll(Arrays.asList(args)));
-        textContainer.register(textHandler);
+        textHandlingMethodGroup.register(textHandler);
 
-        textContainer.processText(text, user);
+        SimpleArgumentKit argumentKit = new SimpleArgumentKit();
+        argumentKit.put(ArgumentType.TEXT, new SimpleArgumentWrapper(text));
+
+        textContainer.process(user, argumentKit);
         return arguments;
     }
 }

@@ -4,16 +4,16 @@ import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.annotation.StateParameters;
 import com.botscrew.botframework.domain.ArgumentsComposerFactory;
-import com.botscrew.botframework.domain.DefaultArgumentKit;
-import com.botscrew.botframework.domain.converter.StringToDoubleConverter;
+import com.botscrew.botframework.domain.SimpleArgumentKit;
+import com.botscrew.botframework.domain.converter.impl.StringToDoubleConverter;
 import com.botscrew.botframework.domain.converter.impl.StringToIntegerConverter;
 import com.botscrew.botframework.domain.converter.impl.UserConverter;
+import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import com.botscrew.botframework.model.ChatUser;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
@@ -21,7 +21,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class IntentContainerTests {
 
-    private IntentMethodGroup intentMethodGroup;
+    private IntentHandlingMethodGroup intentMethodGroup;
     private IntentContainer intentContainer;
     private boolean called;
     private Object[] params;
@@ -35,7 +35,7 @@ public class IntentContainerTests {
 
     @Before
     public void beforeEach() {
-        intentMethodGroup = new IntentMethodGroup();
+        intentMethodGroup = new IntentHandlingMethodGroup();
         intentContainer = new IntentContainer(intentMethodGroup);
         called = false;
         params = new Object[0];
@@ -46,14 +46,14 @@ public class IntentContainerTests {
         ChatUser user = () -> "default";
         String intent = "intent";
 
-        intentContainer.process(user, intent, new DefaultArgumentKit());
+        intentContainer.process(user, intent, new SimpleArgumentKit());
     }
 
     @Test
     public void shouldProcessDefaultRegisteredMethod() throws Exception {
         intentMethodGroup.register(new DefaultIntentHandler());
 
-        intentContainer.process(() -> "default", "intent", new DefaultArgumentKit());
+        intentContainer.process(() -> "default", "intent", new SimpleArgumentKit());
 
         assertTrue(called);
     }
@@ -72,7 +72,7 @@ public class IntentContainerTests {
         intentMethodGroup.register(new DefaultIntentHandlerWithUser());
 
         MyUser user = new MyUser();
-        intentContainer.process(user, "intent", new DefaultArgumentKit());
+        intentContainer.process(user, "intent", new SimpleArgumentKit());
 
         assertTrue(called);
         assertEquals(user, params[0]);
@@ -212,7 +212,7 @@ public class IntentContainerTests {
     public void shouldPassFloatStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithFloatParam());
 
-        intentContainer.process(() -> "default?param=1.0", "intent", null);
+        intentContainer.process(() -> "default?param=1.0", "intent", new SimpleArgumentKit());
 
         float expected = 1.0f;
         assertEquals(expected, params[0]);
@@ -230,7 +230,7 @@ public class IntentContainerTests {
     @Test
     public void shouldPassDoubleStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithDoubleParam());
-        intentContainer.process(() -> "default?param=1.0", "intent", new DefaultArgumentKit());
+        intentContainer.process(() -> "default?param=1.0", "intent", new SimpleArgumentKit());
 
         double expected = 1.0d;
         assertEquals(expected, params[0]);

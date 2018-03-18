@@ -2,12 +2,11 @@ package com.botscrew.botframework.container.domain;
 
 import com.botscrew.botframework.annotation.Location;
 import com.botscrew.botframework.annotation.Param;
-import com.botscrew.botframework.model.GeoCoordinates;
 
 public class LocationHandlerImpl extends Followable {
 
     @Location
-    public void consumeTextAndUser(GeoCoordinates coordinates, UserImpl user) {
+    public void consumeTextAndUser(@Location GeoCoordinates coordinates, UserImpl user) {
         Object[] args = new Object[2];
         args[0] = coordinates;
         args[1] = user;

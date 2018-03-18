@@ -44,7 +44,9 @@ public class ArgumentsComposer {
 
     private Object convertIfNeededAndReturn(CompositeParameter parameter, ArgumentWrapper argumentWrapper) {
         Object value = argumentWrapper.getValue();
-        if (parameter.getOriginalType().equals(value.getClass())) return value;
+        if (isTheSameOrInherited(value.getClass(), parameter.getOriginalType())) {
+            return value;
+        }
 
         ArgumentConverter argumentConverter = converters.get(ConverterKey.of(value.getClass(), parameter.getType()));
         if (argumentConverter == null) {
@@ -53,5 +55,9 @@ public class ArgumentsComposer {
         }
 
         return argumentConverter.convert(value, parameter.getOriginalType());
+    }
+
+    private boolean isTheSameOrInherited(Class<?> argumentType, Class<?> parameterType) {
+        return parameterType.equals(argumentType) || parameterType.isAssignableFrom(argumentType);
     }
 }

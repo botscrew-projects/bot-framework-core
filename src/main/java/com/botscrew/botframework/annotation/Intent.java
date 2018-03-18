@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 public @interface Intent {
 
+    String value() default "";
     String[] states() default {};
-    String name() default "";
 }

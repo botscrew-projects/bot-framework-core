@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.PARAMETER })
 public @interface Postback {
-	String postback() default "";
+	String value() default "";
 
 	String[] states() default {};
 }

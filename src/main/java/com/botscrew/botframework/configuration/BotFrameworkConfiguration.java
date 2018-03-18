@@ -1,29 +1,24 @@
 package com.botscrew.botframework.configuration;
 
-import com.botscrew.botframework.configuration.bpp.ChatEventsAnnotationBPP;
+import com.botscrew.botframework.configuration.bpp.ChatEventsProcessorAnnotationBPP;
 import com.botscrew.botframework.configuration.bpp.IntentProcessorAnnotationBPP;
-import com.botscrew.botframework.container.*;
-import com.botscrew.botframework.domain.ArgumentsComposer;
-import com.botscrew.botframework.domain.ArgumentsComposerFactory;
-import com.botscrew.botframework.domain.converter.ArgumentConverter;
-import com.botscrew.botframework.domain.converter.ConverterKey;
+import com.botscrew.botframework.container.IntentContainer;
+import com.botscrew.botframework.container.LocationContainer;
+import com.botscrew.botframework.container.PostbackContainer;
+import com.botscrew.botframework.container.TextContainer;
+import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.group.LocationHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.group.PostbackHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.group.TextHandlingMethodGroup;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Configuration
-@Import(ArgumentConvertersConfiguration.class)
 public class BotFrameworkConfiguration {
 
     @Bean
-    public ChatEventsAnnotationBPP postbackContainerBPP() {
-        return new ChatEventsAnnotationBPP();
+    public ChatEventsProcessorAnnotationBPP postbackContainerBPP() {
+        return new ChatEventsProcessorAnnotationBPP();
     }
 
     @Bean
@@ -32,27 +27,42 @@ public class BotFrameworkConfiguration {
     }
 
     @Bean
-    public PostbackContainer postbackContainer() {
-        return new PostbackContainer();
+    public PostbackHandlingMethodGroup postbackHandlingMethodGroup() {
+        return new PostbackHandlingMethodGroup();
     }
 
     @Bean
-    public TextContainer textContainer() {
-        return new TextContainer();
+    public PostbackContainer postbackContainer(PostbackHandlingMethodGroup postbackHandlingMethodGroup) {
+        return new PostbackContainer(postbackHandlingMethodGroup);
     }
 
     @Bean
-    public LocationContainer locationContainer() {
-        return new LocationContainer();
+    public TextHandlingMethodGroup textHandlingMethodGroup() {
+        return new TextHandlingMethodGroup();
     }
 
     @Bean
-    public IntentMethodGroup intentMethodGroup() {
-        return new IntentMethodGroup();
+    public TextContainer textContainer(TextHandlingMethodGroup methodGroup) {
+        return new TextContainer(methodGroup);
     }
 
     @Bean
-    public IntentContainer intentContainer(IntentMethodGroup intentMethodGroup) {
+    public LocationHandlingMethodGroup locationHandlingMethodGroup() {
+        return new LocationHandlingMethodGroup();
+    }
+
+    @Bean
+    public LocationContainer locationContainer(LocationHandlingMethodGroup locationHandlingMethodGroup) {
+        return new LocationContainer(locationHandlingMethodGroup);
+    }
+
+    @Bean
+    public IntentHandlingMethodGroup intentMethodGroup() {
+        return new IntentHandlingMethodGroup();
+    }
+
+    @Bean
+    public IntentContainer intentContainer(IntentHandlingMethodGroup intentMethodGroup) {
         return new IntentContainer(intentMethodGroup);
     }
 }
