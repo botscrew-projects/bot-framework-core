@@ -10,5 +10,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({METHOD, ElementType.PARAMETER})
 public @interface Text {
-	String[] states() default {};
+    String[] states() default {};
 }

@@ -3,15 +3,10 @@ package com.botscrew.botframework.container;
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.annotation.StateParameters;
-import com.botscrew.botframework.domain.ArgumentsComposerFactory;
-import com.botscrew.botframework.domain.SimpleArgumentKit;
-import com.botscrew.botframework.domain.converter.impl.StringToDoubleConverter;
-import com.botscrew.botframework.domain.converter.impl.StringToIntegerConverter;
-import com.botscrew.botframework.domain.converter.impl.UserConverter;
+import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
-import com.botscrew.botframework.model.ChatUser;
+import com.botscrew.botframework.domain.ChatUser;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Map;
@@ -25,13 +20,6 @@ public class IntentContainerTests {
     private IntentContainer intentContainer;
     private boolean called;
     private Object[] params;
-
-    @BeforeClass
-    public static void before() {
-        ArgumentsComposerFactory.putConverter(new StringToIntegerConverter());
-        ArgumentsComposerFactory.putConverter(new StringToDoubleConverter());
-        ArgumentsComposerFactory.putConverter(new UserConverter());
-    }
 
     @Before
     public void beforeEach() {
@@ -58,7 +46,7 @@ public class IntentContainerTests {
         assertTrue(called);
     }
 
-    private class DefaultIntentHandler {
+    public class DefaultIntentHandler {
 
         @Intent
         public void defaultMethod() {
@@ -78,7 +66,7 @@ public class IntentContainerTests {
         assertEquals(user, params[0]);
     }
 
-    private class DefaultIntentHandlerWithUser {
+    public class DefaultIntentHandlerWithUser {
 
         @Intent
         public void defaultMethod(MyUser user) {
@@ -89,7 +77,7 @@ public class IntentContainerTests {
 
     }
 
-    private class MyUser implements ChatUser {
+    public class MyUser implements ChatUser {
 
         @Override
         public String getState() {

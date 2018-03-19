@@ -1,9 +1,11 @@
-package com.botscrew.botframework.domain;
+package com.botscrew.botframework.domain.argument.composer;
 
+import com.botscrew.botframework.domain.CompositeParameter;
+import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
+import com.botscrew.botframework.domain.argument.wrapper.ArgumentWrapper;
 import com.botscrew.botframework.domain.converter.ArgumentConverter;
 import com.botscrew.botframework.domain.converter.ConverterKey;
 import com.botscrew.botframework.exception.ProcessorInnerException;
-import com.botscrew.botframework.model.CompositeParameter;
 
 import java.util.List;
 import java.util.Map;
@@ -26,15 +28,13 @@ public class ArgumentsComposer {
             Optional<ArgumentWrapper> wrapperOpt;
             if (param.hasName()) {
                 wrapperOpt = kit.get(param.getName());
-            }
-            else {
+            } else {
                 wrapperOpt = kit.get(param.getType());
             }
 
             if (wrapperOpt.isPresent()) {
                 result[i] = convertIfNeededAndReturn(param, wrapperOpt.get());
-            }
-            else {
+            } else {
                 result[i] = null;
             }
         }

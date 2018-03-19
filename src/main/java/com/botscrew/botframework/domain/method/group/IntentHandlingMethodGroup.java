@@ -34,17 +34,17 @@ public class IntentHandlingMethodGroup implements HandlingMethodGroup {
             return Optional.of(byIntentAndState);
         }
 
-        IntentHandlingMethod byIntent = instanceMethods.get(new BiMethodKey(ALL_STATES, key.getStringKey()));
+        IntentHandlingMethod byIntent = instanceMethods.get(new BiMethodKey(Key.ALL_STATES, key.getStringKey()));
         if (byIntent != null) {
             return Optional.of(byIntent);
         }
 
-        IntentHandlingMethod byState = instanceMethods.get(new BiMethodKey(key.getState(), ALL_INTENTS));
+        IntentHandlingMethod byState = instanceMethods.get(new BiMethodKey(key.getState(), Key.ALL_INTENTS));
         if (byState != null) {
             return Optional.of(byState);
         }
 
-        IntentHandlingMethod defaultMethod = instanceMethods.get(new BiMethodKey(ALL_STATES, ALL_INTENTS));
+        IntentHandlingMethod defaultMethod = instanceMethods.get(new BiMethodKey(Key.ALL_STATES, Key.ALL_INTENTS));
         return Optional.ofNullable(defaultMethod);
     }
 
@@ -69,10 +69,10 @@ public class IntentHandlingMethodGroup implements HandlingMethodGroup {
         List<BiMethodKey> keys = new ArrayList<>();
 
         String intent = intentAnnotation.value();
-        if (intent.isEmpty()) intent = ALL_INTENTS;
+        if (intent.isEmpty()) intent = Key.ALL_INTENTS;
 
         if (intentAnnotation.states().length == 0) {
-            keys.add(new BiMethodKey(ALL_STATES, intent));
+            keys.add(new BiMethodKey(Key.ALL_STATES, intent));
             return keys;
         }
 

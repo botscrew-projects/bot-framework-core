@@ -1,21 +1,18 @@
 package com.botscrew.botframework.domain.method;
 
-import com.botscrew.botframework.domain.ArgumentKit;
-import com.botscrew.botframework.domain.ArgumentsComposer;
-import com.botscrew.botframework.domain.ArgumentsComposerFactory;
-import com.botscrew.botframework.model.ArgumentType;
-import com.botscrew.botframework.model.CompositeParameter;
+import com.botscrew.botframework.domain.CompositeParameter;
+import com.botscrew.botframework.domain.argument.ArgumentType;
+import com.botscrew.botframework.domain.argument.composer.ArgumentsComposer;
+import com.botscrew.botframework.domain.argument.composer.ArgumentsComposerFactory;
+import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
+import com.botscrew.botframework.exception.ProcessorInnerException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
 public abstract class HandlingMethod {
-
-    private Object instance;
-    private Method method;
-    private ArgumentsComposer argumentsComposer;
-    private List<CompositeParameter> compositeParameters;
 
     private static final Map<Class, ArgumentType> supportedBaseTypes;
 
@@ -31,6 +28,11 @@ public abstract class HandlingMethod {
         supportedBaseTypes.put(String.class, ArgumentType.PARAM_STRING);
     }
 
+    private Object instance;
+    private Method method;
+    private ArgumentsComposer argumentsComposer;
+    private List<CompositeParameter> parameters;
+
     private HandlingMethod() {}
 
     public HandlingMethod(Object instance, Method method) {
@@ -38,39 +40,32 @@ public abstract class HandlingMethod {
         this.method = method;
 
         buildCompositeParameters();
-        argumentsComposer = ArgumentsComposerFactory.create(this.getCompositeParameters());
+        argumentsComposer = ArgumentsComposerFactory.create(this.parameters);
     }
 
-    public Object[] composeArgs(ArgumentKit kit) {
-        return argumentsComposer.compose(kit);
+    public void invoke(ArgumentKit kit) {
+        try {
+            Object[] args = argumentsComposer.compose(kit);
+            method.invoke(instance, args);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new ProcessorInnerException("Cannot process instance method", e);
+        }
     }
 
     private void buildCompositeParameters() {
-        Parameter[] parameters = getMethod().getParameters();
-        CompositeParameter[] compositeParams = new CompositeParameter[parameters.length];
+        Parameter[] originalParameters = this.method.getParameters();
+        CompositeParameter[] compositeParams = new CompositeParameter[originalParameters.length];
 
-        for (int i = 0; i < parameters.length; i++) {
-            compositeParams[i] = createCompositeParameter(parameters[i]);
+        for (int i = 0; i < originalParameters.length; i++) {
+            compositeParams[i] = createCompositeParameter(originalParameters[i]);
         }
 
-        this.compositeParameters = Arrays.asList(compositeParams);
+        this.parameters = Arrays.asList(compositeParams);
     }
-
-    protected abstract CompositeParameter createCompositeParameter(Parameter parameter);
 
     Optional<ArgumentType> getBaseTypeArgumentByClass(Class<?> type) {
         return Optional.ofNullable(supportedBaseTypes.get(type));
     }
 
-    public Object getInstance() {
-        return instance;
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public List<CompositeParameter> getCompositeParameters() {
-        return compositeParameters;
-    }
+    protected abstract CompositeParameter createCompositeParameter(Parameter parameter);
 }

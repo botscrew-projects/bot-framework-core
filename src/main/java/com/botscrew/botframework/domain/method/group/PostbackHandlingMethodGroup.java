@@ -34,17 +34,17 @@ public class PostbackHandlingMethodGroup implements HandlingMethodGroup {
             return Optional.of(byPostbackAndState);
         }
 
-        PostbackHandlingMethod byPostback = instanceMethods.get(new BiMethodKey(ALL_STATES, key.getStringKey()));
+        PostbackHandlingMethod byPostback = instanceMethods.get(new BiMethodKey(Key.ALL_STATES, key.getStringKey()));
         if (byPostback != null) {
             return Optional.of(byPostback);
         }
 
-        PostbackHandlingMethod byState = instanceMethods.get(new BiMethodKey(key.getState(), ALL_POSTBACKS));
+        PostbackHandlingMethod byState = instanceMethods.get(new BiMethodKey(key.getState(), Key.ALL_POSTBACKS));
         if (byState != null) {
             return Optional.of(byState);
         }
 
-        PostbackHandlingMethod defaultMethod = instanceMethods.get(new BiMethodKey(ALL_STATES, ALL_POSTBACKS));
+        PostbackHandlingMethod defaultMethod = instanceMethods.get(new BiMethodKey(Key.ALL_STATES, Key.ALL_POSTBACKS));
         return Optional.ofNullable(defaultMethod);
     }
 
@@ -65,10 +65,10 @@ public class PostbackHandlingMethodGroup implements HandlingMethodGroup {
         List<BiMethodKey> keys = new ArrayList<>();
 
         String postback = postbackAnnotation.value();
-        if (postback.isEmpty()) postback = ALL_POSTBACKS;
+        if (postback.isEmpty()) postback = Key.ALL_POSTBACKS;
 
         if (postbackAnnotation.states().length == 0) {
-            keys.add(new BiMethodKey(ALL_STATES, postback));
+            keys.add(new BiMethodKey(Key.ALL_STATES, postback));
             return keys;
         }
 

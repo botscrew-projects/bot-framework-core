@@ -1,7 +1,6 @@
 package com.botscrew.botframework.configuration.bpp;
 
 import com.botscrew.botframework.domain.method.group.HandlingMethodGroup;
-import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.lang.annotation.Annotation;

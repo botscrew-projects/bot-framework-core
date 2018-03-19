@@ -3,11 +3,13 @@ package com.botscrew.botframework.container;
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.key.BiMethodKey;
-import com.botscrew.botframework.model.ChatUser;
+import com.botscrew.botframework.domain.ChatUser;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
@@ -48,7 +50,7 @@ public class IntentHandlingMethodGroupTests {
 
         assertTrue(instanceMethod.isPresent());
 
-        Intent annotation = instanceMethod.get().getMethod().getAnnotation(Intent.class);
+        Intent annotation = ((Method) ReflectionTestUtils.getField(instanceMethod.get(), "method")).getAnnotation(Intent.class);
         assertTrue(annotation.value().equals("INTENT1"));
     }
 

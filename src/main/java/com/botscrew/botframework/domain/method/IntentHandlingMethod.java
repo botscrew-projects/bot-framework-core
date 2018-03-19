@@ -2,9 +2,9 @@ package com.botscrew.botframework.domain.method;
 
 
 import com.botscrew.botframework.annotation.StateParameters;
-import com.botscrew.botframework.model.ArgumentType;
-import com.botscrew.botframework.model.ChatUser;
-import com.botscrew.botframework.model.CompositeParameter;
+import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.CompositeParameter;
+import com.botscrew.botframework.domain.argument.ArgumentType;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

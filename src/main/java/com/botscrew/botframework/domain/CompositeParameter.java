@@ -1,6 +1,7 @@
-package com.botscrew.botframework.model;
+package com.botscrew.botframework.domain;
 
 import com.botscrew.botframework.annotation.Param;
+import com.botscrew.botframework.domain.argument.ArgumentType;
 
 import java.lang.reflect.Parameter;
 
@@ -17,6 +18,17 @@ public class CompositeParameter {
         this.name = detectName(parameter);
     }
 
+    private static boolean detectIfNameIsPresent(Parameter parameter) {
+        return parameter.isAnnotationPresent(Param.class);
+    }
+
+    private static String detectName(Parameter parameter) {
+        if (parameter.isAnnotationPresent(Param.class)) {
+            return parameter.getAnnotation(Param.class).value();
+        }
+        return parameter.getName();
+    }
+
     public Class getOriginalType() {
         return this.originalParameter.getType();
     }
@@ -27,17 +39,6 @@ public class CompositeParameter {
 
     public String getName() {
         return name;
-    }
-
-    private static boolean detectIfNameIsPresent(Parameter parameter) {
-        return parameter.isAnnotationPresent(Param.class);
-    }
-
-    private static String detectName(Parameter parameter) {
-        if (parameter.isAnnotationPresent(Param.class)) {
-            return parameter.getAnnotation(Param.class).value();
-        }
-        return parameter.getName();
     }
 
     public ArgumentType getType() {

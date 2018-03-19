@@ -1,20 +1,20 @@
 package com.botscrew.botframework.container;
 
-import com.botscrew.botframework.domain.ArgumentKit;
-import com.botscrew.botframework.domain.SimpleArgumentKit;
-import com.botscrew.botframework.domain.SimpleArgumentWrapper;
+import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.argument.ArgumentType;
+import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
+import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
+import com.botscrew.botframework.domain.argument.wrapper.SimpleArgumentWrapper;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.key.BiMethodKey;
 import com.botscrew.botframework.domain.param.SimpleStringParametersDetector;
 import com.botscrew.botframework.domain.param.StringParametersDetector;
-import com.botscrew.botframework.model.ArgumentType;
-import com.botscrew.botframework.model.ChatUser;
 
 import java.util.Map;
 import java.util.Optional;
 
-public class IntentContainer extends AbstractContainer {
+public class IntentContainer {
 
     private final IntentHandlingMethodGroup intentMethodGroup;
     private final StringParametersDetector stringParametersDetector;
@@ -46,7 +46,7 @@ public class IntentContainer extends AbstractContainer {
             originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }
 
-        tryInvokeMethod(instanceMethod.get(), originalKit);
+        instanceMethod.get().invoke(originalKit);
     }
 
 }

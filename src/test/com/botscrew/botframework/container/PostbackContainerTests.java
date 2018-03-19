@@ -2,12 +2,10 @@ package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.container.domain.PostbackHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
-import com.botscrew.botframework.domain.SimpleArgumentKit;
+import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.method.group.PostbackHandlingMethodGroup;
-import com.botscrew.botframework.model.ChatUser;
+import com.botscrew.botframework.domain.ChatUser;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;

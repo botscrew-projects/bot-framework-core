@@ -1,9 +1,9 @@
 package com.botscrew.botframework.domain.converter.impl;
 
+import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.converter.ArgumentConverter;
 import com.botscrew.botframework.domain.converter.ConverterKey;
-import com.botscrew.botframework.model.ArgumentType;
-import com.botscrew.botframework.model.ChatUser;
 
 public class UserConverter implements ArgumentConverter<ChatUser> {
     private static final ConverterKey KEY = ConverterKey.of(ChatUser.class, ArgumentType.USER);

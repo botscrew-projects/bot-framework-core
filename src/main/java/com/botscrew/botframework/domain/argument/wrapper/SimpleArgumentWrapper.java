@@ -1,4 +1,4 @@
-package com.botscrew.botframework.domain;
+package com.botscrew.botframework.domain.argument.wrapper;
 
 public class SimpleArgumentWrapper implements ArgumentWrapper {
     private final Object value;

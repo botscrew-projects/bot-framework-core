@@ -1,6 +1,8 @@
 package com.botscrew.botframework.domain;
 
-import com.botscrew.botframework.model.ArgumentType;
+import com.botscrew.botframework.domain.argument.ArgumentType;
+import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
+import com.botscrew.botframework.domain.argument.wrapper.SimpleArgumentWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

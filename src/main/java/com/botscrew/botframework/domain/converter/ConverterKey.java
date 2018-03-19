@@ -1,6 +1,6 @@
 package com.botscrew.botframework.domain.converter;
 
-import com.botscrew.botframework.model.ArgumentType;
+import com.botscrew.botframework.domain.argument.ArgumentType;
 
 public class ConverterKey {
     private final Class fromType;
@@ -9,6 +9,10 @@ public class ConverterKey {
     private ConverterKey(Class fromType, ArgumentType toType) {
         this.fromType = fromType;
         this.toType = toType;
+    }
+
+    public static ConverterKey of(Class fromType, ArgumentType toType) {
+        return new ConverterKey(fromType, toType);
     }
 
     public Class getFromType() {
@@ -34,9 +38,5 @@ public class ConverterKey {
         int result = fromType != null ? fromType.hashCode() : 0;
         result = 31 * result + (toType != null ? toType.hashCode() : 0);
         return result;
-    }
-
-    public static ConverterKey of(Class fromType, ArgumentType toType) {
-        return new ConverterKey(fromType, toType);
     }
 }

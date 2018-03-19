@@ -34,7 +34,7 @@ public class TextHandlingMethodGroup implements HandlingMethodGroup {
             return Optional.of(byState);
         }
 
-        TextHandlingMethod defaultMethod = instanceMethods.get(new StateMethodKey(ALL_STATES));
+        TextHandlingMethod defaultMethod = instanceMethods.get(new StateMethodKey(Key.ALL_STATES));
         return Optional.ofNullable(defaultMethod);
     }
 
@@ -55,7 +55,7 @@ public class TextHandlingMethodGroup implements HandlingMethodGroup {
         List<StateMethodKey> keys = new ArrayList<>();
 
         if (textAnnotation.states().length == 0) {
-            keys.add(new StateMethodKey(ALL_STATES));
+            keys.add(new StateMethodKey(Key.ALL_STATES));
             return keys;
         }
 

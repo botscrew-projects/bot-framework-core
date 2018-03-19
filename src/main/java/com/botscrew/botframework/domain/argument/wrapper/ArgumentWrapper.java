@@ -1,4 +1,4 @@
-package com.botscrew.botframework.domain;
+package com.botscrew.botframework.domain.argument.wrapper;
 
 public interface ArgumentWrapper {
     Object getValue();

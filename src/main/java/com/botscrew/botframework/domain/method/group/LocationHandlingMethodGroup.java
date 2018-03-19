@@ -34,7 +34,7 @@ public class LocationHandlingMethodGroup implements HandlingMethodGroup {
             return Optional.of(byState);
         }
 
-        LocationHandlingMethod defaultMethod = instanceMethods.get(new StateMethodKey(ALL_STATES));
+        LocationHandlingMethod defaultMethod = instanceMethods.get(new StateMethodKey(Key.ALL_STATES));
         return Optional.ofNullable(defaultMethod);
     }
 
@@ -51,15 +51,15 @@ public class LocationHandlingMethodGroup implements HandlingMethodGroup {
         }
     }
 
-    private List<StateMethodKey> generateKeys(Location textAnnotation) {
+    private List<StateMethodKey> generateKeys(Location locationAnnotation) {
         List<StateMethodKey> keys = new ArrayList<>();
 
-        if (textAnnotation.states().length == 0) {
-            keys.add(new StateMethodKey(ALL_STATES));
+        if (locationAnnotation.states().length == 0) {
+            keys.add(new StateMethodKey(Key.ALL_STATES));
             return keys;
         }
 
-        for (String state : textAnnotation.states()) {
+        for (String state : locationAnnotation.states()) {
             keys.add(new StateMethodKey(state));
         }
         return keys;
