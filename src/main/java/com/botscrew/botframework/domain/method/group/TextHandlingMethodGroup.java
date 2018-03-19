@@ -46,8 +46,8 @@ public class TextHandlingMethodGroup implements HandlingMethodGroup {
 
             for (StateMethodKey key : keys) {
                 instanceMethods.put(key, instanceMethod);
-                LOGGER.debug("Text handling method added with key: {}", key);
             }
+            LOGGER.debug("Text handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");
         }
     }
 

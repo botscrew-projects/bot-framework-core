@@ -56,8 +56,8 @@ public class PostbackHandlingMethodGroup implements HandlingMethodGroup {
 
             for (BiMethodKey key : keys) {
                 instanceMethods.put(key, instanceMethod);
-                LOGGER.debug("Postback handling method added with key: {}", key);
             }
+            LOGGER.debug("Postback handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");
         }
     }
 

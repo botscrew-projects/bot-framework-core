@@ -52,17 +52,13 @@ public class IntentHandlingMethodGroup implements HandlingMethodGroup {
         if (method.isAnnotationPresent(Intent.class)) {
             Intent intentAnnotation = method.getAnnotation(Intent.class);
             List<BiMethodKey> keys = generateKeys(intentAnnotation);
-            IntentHandlingMethod instanceMethod = generateInstanceMethod(object, method);
+            IntentHandlingMethod instanceMethod = new IntentHandlingMethod(object, method);
 
             for (BiMethodKey key : keys) {
                 instanceMethods.put(key, instanceMethod);
-                LOGGER.debug("Intent handling method added with key: {}", key);
             }
+            LOGGER.debug("Intent handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");
         }
-    }
-
-    private IntentHandlingMethod generateInstanceMethod(Object object, Method method) {
-        return new IntentHandlingMethod(object, method);
     }
 
     private List<BiMethodKey> generateKeys(Intent intentAnnotation) {
