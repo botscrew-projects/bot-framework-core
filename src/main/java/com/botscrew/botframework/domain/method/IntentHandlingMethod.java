@@ -26,7 +26,7 @@ public class IntentHandlingMethod extends HandlingMethod {
 
         Optional<ArgumentType> baseTypeOpt = getBaseTypeArgumentByClass(parameter.getType());
 
-        ArgumentType baseType = baseTypeOpt.orElse(ArgumentType.UNKNOWN);
+        ArgumentType baseType = baseTypeOpt.orElse(ArgumentType.COMPLEX_TYPE);
         return new CompositeParameter(baseType, parameter);
     }
 }

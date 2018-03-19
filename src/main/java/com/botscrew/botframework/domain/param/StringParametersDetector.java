@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface StringParametersDetector {
 
-    public abstract String getValueWithoutParams(String withParams);
-    public abstract Map<String, String> getParameters(String baseValue);
+    String getValueWithoutParams(String withParams);
+    Map<String, String> getParameters(String baseValue);
 }
