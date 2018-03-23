@@ -13,6 +13,10 @@ public class PlatformSender implements Sender<Message> {
         this.platformSenders = new HashMap<>();
     }
 
+    public void addSender(Platform platform, Sender sender) {
+        platformSenders.put(platform, sender);
+    }
+
     @Override
     public void send(Chat chat, Message message) {
         platformSenders.get(chat.getPlatform()).send(chat, message);
