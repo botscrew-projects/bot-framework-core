@@ -10,6 +10,7 @@ import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.group.LocationHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.group.PostbackHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.group.TextHandlingMethodGroup;
+import com.botscrew.botframework.sender.PlatformSender;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -64,5 +65,10 @@ public class BotFrameworkConfiguration {
     @Bean
     public IntentContainer intentContainer(IntentHandlingMethodGroup intentMethodGroup) {
         return new IntentContainer(intentMethodGroup);
+    }
+
+    @Bean
+    public PlatformSender platformSender() {
+        return new PlatformSender();
     }
 }
