@@ -6,6 +6,7 @@ import com.botscrew.botframework.annotation.StateParameters;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.exception.ProcessorInnerException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -231,5 +232,25 @@ public class IntentContainerTests {
             params = new Object[1];
             params[0] = param;
         }
+    }
+
+    @Test(expected = ProcessorInnerException.class)
+    public void shouldThrowExceptionIfMethodContainsAFewParamsWithTheSameName() {
+        intentMethodGroup.register(new IntentProcessorWithTheSameParamNames());
+    }
+
+    public class IntentProcessorWithTheSameParamNames {
+        @Intent
+        public void intent(@Param("one") String one, @Param("one") String two) {}
+    }
+
+    @Test(expected = ProcessorInnerException.class)
+    public void shouldThrowExceptionIfMethodContainsAFewParamsWithTheSameTypeAndWithoutName() {
+        intentMethodGroup.register(new IntentProcessorWithTheSameParamTypes());
+    }
+
+    public class IntentProcessorWithTheSameParamTypes {
+        @Intent
+        public void intent(String one, String two) {}
     }
 }
