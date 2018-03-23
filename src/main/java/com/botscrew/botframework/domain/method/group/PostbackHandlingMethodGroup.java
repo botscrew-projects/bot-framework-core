@@ -4,6 +4,7 @@ import com.botscrew.botframework.annotation.Postback;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import com.botscrew.botframework.domain.method.PostbackHandlingMethod;
 import com.botscrew.botframework.domain.method.key.BiMethodKey;
+import com.botscrew.botframework.exception.MethodSignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,9 @@ public class PostbackHandlingMethodGroup implements HandlingMethodGroup {
             PostbackHandlingMethod instanceMethod = new PostbackHandlingMethod(object, method);
 
             for (BiMethodKey key : keys) {
+                if (instanceMethods.containsKey(key)) {
+                    throw new MethodSignatureException("Defined a few methods with @Postback annotation with key: " + key.toString());
+                }
                 instanceMethods.put(key, instanceMethod);
             }
             LOGGER.debug("Postback handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");

@@ -4,6 +4,7 @@ import com.botscrew.botframework.annotation.Text;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import com.botscrew.botframework.domain.method.TextHandlingMethod;
 import com.botscrew.botframework.domain.method.key.StateMethodKey;
+import com.botscrew.botframework.exception.MethodSignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,9 @@ public class TextHandlingMethodGroup implements HandlingMethodGroup {
             TextHandlingMethod instanceMethod = new TextHandlingMethod(object, method);
 
             for (StateMethodKey key : keys) {
+                if (instanceMethods.containsKey(key)) {
+                    throw new MethodSignatureException("Defined a few methods with @Text annotation with key: " + key.toString());
+                }
                 instanceMethods.put(key, instanceMethod);
             }
             LOGGER.debug("Text handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");

@@ -4,6 +4,7 @@ import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import com.botscrew.botframework.domain.method.IntentHandlingMethod;
 import com.botscrew.botframework.domain.method.key.BiMethodKey;
+import com.botscrew.botframework.exception.MethodSignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,9 @@ public class IntentHandlingMethodGroup implements HandlingMethodGroup {
             IntentHandlingMethod instanceMethod = new IntentHandlingMethod(object, method);
 
             for (BiMethodKey key : keys) {
+                if (instanceMethods.containsKey(key)) {
+                    throw new MethodSignatureException("Defined a few methods with @Intent annotation with key: " + key.toString());
+                }
                 instanceMethods.put(key, instanceMethod);
             }
             LOGGER.debug("Intent handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");

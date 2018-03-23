@@ -4,6 +4,7 @@ import com.botscrew.botframework.annotation.Location;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import com.botscrew.botframework.domain.method.LocationHandlingMethod;
 import com.botscrew.botframework.domain.method.key.StateMethodKey;
+import com.botscrew.botframework.exception.MethodSignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,9 @@ public class LocationHandlingMethodGroup implements HandlingMethodGroup {
             LocationHandlingMethod instanceMethod = new LocationHandlingMethod(object, method);
 
             for (StateMethodKey key : keys) {
+                if (instanceMethods.containsKey(key)) {
+                    throw new MethodSignatureException("Defined a few methods with @Location annotation with key: " + key.toString());
+                }
                 instanceMethods.put(key, instanceMethod);
             }
             LOGGER.debug("Location handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");
