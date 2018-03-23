@@ -58,14 +58,14 @@ public abstract class HandlingMethod {
 
         for (CompositeParameter parameter : parameters) {
             if (parameter.hasName() && names.contains(parameter.getName())) {
-                throw new MethodSignatureException("Method: " + instance.getClass().toString() + "." + method.getName()
-                        + "contains params with the same name: " + parameter.getName());
+                throw new MethodSignatureException("Method: " + instance.getClass().getName() + "." + method.getName()
+                        + "() contains params with the same name: " + parameter.getName());
             }
             names.add(parameter.getName());
 
             if (!parameter.hasName() && types.contains(parameter.getType())) {
                 throw new MethodSignatureException("Method: " + instance.getClass().toString() + "." + method.getName()
-                        + "contains params without names and the same type: " + parameter.getType());
+                        + "() contains params without names and the same type: " + parameter.getType());
             }
             types.add(parameter.getType());
         }
