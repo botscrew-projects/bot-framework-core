@@ -5,7 +5,7 @@
 
 	<groupId>com.botscrew</groupId>
 	<artifactId>bot-framework-spring-boot-starter</artifactId>
-	<version>1.0.0-SNAPSHOT-14</version>
+	<version>1.0.0-SNAPSHOT-15</version>
 	<packaging>jar</packaging>
 
 	<name>BotFramework</name>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
