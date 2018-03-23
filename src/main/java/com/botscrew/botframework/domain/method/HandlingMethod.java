@@ -5,15 +5,19 @@ import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.argument.composer.ArgumentsComposer;
 import com.botscrew.botframework.domain.argument.composer.ArgumentsComposerFactory;
 import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
+import com.botscrew.botframework.exception.MethodSignatureException;
 import com.botscrew.botframework.exception.ProcessorInnerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
 public abstract class HandlingMethod {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(HandlingMethod.class);
     private static final Map<Class, ArgumentType> supportedBaseTypes;
 
     static {
@@ -40,7 +44,31 @@ public abstract class HandlingMethod {
         this.method = method;
 
         buildCompositeParameters();
+        checkIfMethodIsCorrect();
         argumentsComposer = ArgumentsComposerFactory.create(this.parameters);
+    }
+
+    private void checkIfMethodIsCorrect() {
+        if (!Modifier.isPublic(method.getModifiers())) {
+            LOGGER.warn("Method " + method.getName() + " from " + instance.getClass().toString() + " is not public.");
+        }
+
+        Set<String> names = new HashSet<>();
+        Set<ArgumentType> types = new HashSet<>();
+
+        for (CompositeParameter parameter : parameters) {
+            if (parameter.hasName() && names.contains(parameter.getName())) {
+                throw new MethodSignatureException("Method: " + instance.getClass().toString() + "." + method.getName()
+                        + "contains params with the same name: " + parameter.getName());
+            }
+            names.add(parameter.getName());
+
+            if (!parameter.hasName() && types.contains(parameter.getType())) {
+                throw new MethodSignatureException("Method: " + instance.getClass().toString() + "." + method.getName()
+                        + "contains params without names and the same type: " + parameter.getType());
+            }
+            types.add(parameter.getType());
+        }
     }
 
     public void invoke(ArgumentKit kit) {
