@@ -1,6 +1,6 @@
 package com.botscrew.botframework.domain.user;
 
-public interface Chat {
+public interface Bot {
     Platform getPlatform();
 
 }

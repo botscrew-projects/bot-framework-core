@@ -1,8 +1,8 @@
 package com.botscrew.botframework.sender;
 
-import com.botscrew.botframework.domain.user.Chat;
+import com.botscrew.botframework.domain.user.Bot;
 
-public interface Sender<M extends Message> {
+public interface Sender<B extends Bot, M extends Message> {
 
-    void send(Chat chat, M m);
+    void send(B bot, M message);
 }
