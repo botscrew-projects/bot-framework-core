@@ -5,7 +5,7 @@ import com.botscrew.botframework.annotation.Param;
 import com.botscrew.botframework.annotation.StateParameters;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
-import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.exception.ProcessorInnerException;
 import org.junit.Before;
 import org.junit.Test;

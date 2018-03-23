@@ -3,7 +3,7 @@ package com.botscrew.botframework.domain.method;
 import com.botscrew.botframework.annotation.Postback;
 import com.botscrew.botframework.annotation.PostbackParameters;
 import com.botscrew.botframework.annotation.StateParameters;
-import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.domain.CompositeParameter;
 import com.botscrew.botframework.domain.argument.ArgumentType;
 

@@ -1,6 +1,6 @@
 package com.botscrew.botframework.domain.converter.impl;
 
-import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.converter.ArgumentConverter;
 import com.botscrew.botframework.domain.converter.ConverterKey;

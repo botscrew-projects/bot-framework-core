@@ -3,7 +3,7 @@ package com.botscrew.botframework.container;
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.key.BiMethodKey;
-import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import org.junit.Before;
 import org.junit.Test;

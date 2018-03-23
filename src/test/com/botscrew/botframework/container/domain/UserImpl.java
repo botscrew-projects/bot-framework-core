@@ -1,6 +1,6 @@
 package com.botscrew.botframework.container.domain;
 
-import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.user.ChatUser;
 
 public class UserImpl implements ChatUser {
 

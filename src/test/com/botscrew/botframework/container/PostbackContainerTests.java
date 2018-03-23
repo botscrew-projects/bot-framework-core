@@ -4,7 +4,7 @@ import com.botscrew.botframework.container.domain.PostbackHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.method.group.PostbackHandlingMethodGroup;
-import com.botscrew.botframework.domain.ChatUser;
+import com.botscrew.botframework.domain.user.ChatUser;
 import org.junit.Test;
 
 import java.util.ArrayList;
