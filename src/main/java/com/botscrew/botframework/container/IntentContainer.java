@@ -29,6 +29,10 @@ public class IntentContainer {
         this.stringParametersDetector = stringParametersDetector;
     }
 
+    public void process(ChatUser user, String intent) {
+        process(user, intent, new SimpleArgumentKit());
+    }
+
     public void process(ChatUser user, String intent, ArgumentKit originalKit) {
         if (originalKit == null) originalKit = new SimpleArgumentKit();
 

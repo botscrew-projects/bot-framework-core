@@ -28,6 +28,10 @@ public class PostbackContainer {
         this.stringParametersDetector = stringParametersDetector;
     }
 
+    public void process(ChatUser user, String postback) {
+        process(user, postback, new SimpleArgumentKit());
+    }
+
     public void process(ChatUser user, String postback, ArgumentKit originalKit) {
         if (originalKit == null) originalKit = new SimpleArgumentKit();
 
