@@ -43,10 +43,14 @@ public class IntentContainer {
             throw new IllegalArgumentException("No eligible method found for state: " + user.getState() + " and intent: " + intent);
         }
         Map<String, String> stateParameters = stringParametersDetector.getParameters(user.getState());
+        Map<String, String> intentParameters = stringParametersDetector.getParameters(intent);
 
         originalKit.put(ArgumentType.USER, new SimpleArgumentWrapper(user));
         originalKit.put(ArgumentType.STATE_PARAMETERS, new SimpleArgumentWrapper(stateParameters));
         for (Map.Entry<String, String> entry : stateParameters.entrySet()) {
+            originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
+        }
+        for (Map.Entry<String, String> entry : intentParameters.entrySet()) {
             originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }
 
