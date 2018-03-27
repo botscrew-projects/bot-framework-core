@@ -4,6 +4,7 @@ package com.botscrew.botframework.domain.method;
 import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.annotation.NlpResponse;
 import com.botscrew.botframework.annotation.StateParameters;
+import com.botscrew.botframework.annotation.Text;
 import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.domain.CompositeParameter;
 import com.botscrew.botframework.domain.argument.ArgumentType;
@@ -30,6 +31,9 @@ public class IntentHandlingMethod extends HandlingMethod {
         }
         if (parameter.isAnnotationPresent(Intent.class)) {
             return new CompositeParameter(ArgumentType.INTENT, parameter);
+        }
+        if (parameter.isAnnotationPresent(Text.class)) {
+            return new CompositeParameter(ArgumentType.TEXT, parameter);
         }
 
         Optional<ArgumentType> baseTypeOpt = getBaseTypeArgumentByClass(parameter.getType());
