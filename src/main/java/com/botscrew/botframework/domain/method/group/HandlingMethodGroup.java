@@ -7,7 +7,7 @@ public interface HandlingMethodGroup {
         private Key() {}
 
         public static final String ALL_INTENTS = "ALL_INTENTS";
-        public static final String ALL_STATES = "Key.ALL_STATES";
+        public static final String ALL_STATES = "ALL_STATES";
         public static final String ALL_POSTBACKS = "ALL_POSTBACKS";
     }
 }
