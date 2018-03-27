@@ -47,6 +47,7 @@ public class IntentContainer {
 
         originalKit.put(ArgumentType.USER, new SimpleArgumentWrapper(user));
         originalKit.put(ArgumentType.STATE_PARAMETERS, new SimpleArgumentWrapper(stateParameters));
+        originalKit.put(ArgumentType.INTENT, new SimpleArgumentWrapper(intent));
         for (Map.Entry<String, String> entry : stateParameters.entrySet()) {
             originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }

@@ -7,7 +7,11 @@ public enum ArgumentType {
     POSTBACK,
     POSTBACK_PARAMETERS,
     TEXT,
+    INTENT,
     COORDINATES,
+    NATIVE_NLP_RESPONSE,
+    COMPLEX_TYPE,
+    UNKNOWN,
 
     PARAM_STRING,
     PARAM_INTEGER,
@@ -15,8 +19,5 @@ public enum ArgumentType {
     PARAM_SHORT,
     PARAM_FLOAT,
     PARAM_DOUBLE,
-    PARAM_LONG,
-    NATIVE_NLP_RESPONSE,
-
-    COMPLEX_TYPE, UNKNOWN
+    PARAM_LONG
 }
