@@ -9,12 +9,14 @@ import java.util.List;
 
 public abstract class SpecificHandlingMethodAnnotationBPP implements BeanPostProcessor {
     private final Class<? extends Annotation> annotation;
+    private final List<Class<? extends HandlingMethodGroup>> handlingMethodGroupTypes;
 
     private List<HandlingMethodGroup> handlingMethodGroups;
     private List<Object> processors;
 
-    public SpecificHandlingMethodAnnotationBPP(Class<? extends Annotation> annotation) {
+    public SpecificHandlingMethodAnnotationBPP(Class<? extends Annotation> annotation, List<Class<? extends HandlingMethodGroup>> handlingMethodGroupTypes) {
         this.annotation = annotation;
+        this.handlingMethodGroupTypes = handlingMethodGroupTypes;
         handlingMethodGroups = new ArrayList<>();
         processors = new ArrayList<>();
     }
@@ -26,7 +28,7 @@ public abstract class SpecificHandlingMethodAnnotationBPP implements BeanPostPro
 
     @Override
     public Object postProcessAfterInitialization(Object o, String s) {
-        if (o instanceof HandlingMethodGroup) {
+        if (o instanceof HandlingMethodGroup && handlingMethodGroupTypes.contains(o.getClass())) {
             HandlingMethodGroup handlingMethodGroup = (HandlingMethodGroup) o;
             handlingMethodGroups.add(handlingMethodGroup);
             processors.forEach(handlingMethodGroup::register);

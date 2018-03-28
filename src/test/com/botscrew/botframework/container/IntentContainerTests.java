@@ -1,8 +1,6 @@
 package com.botscrew.botframework.container;
 
-import com.botscrew.botframework.annotation.Intent;
-import com.botscrew.botframework.annotation.Param;
-import com.botscrew.botframework.annotation.StateParameters;
+import com.botscrew.botframework.annotation.*;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
 import com.botscrew.botframework.domain.user.ChatUser;

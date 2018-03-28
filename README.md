@@ -1,4 +1,4 @@
-Bot Framework Spring Boot Starter
+**_Bot Framework Spring Boot Starter_**
 
 Bot Framework makes it easier to work with chat bot applications
 based on Spring Boot architecture.
