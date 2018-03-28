@@ -10,20 +10,20 @@ you can add dependency to your build configuration
 
 Add the next repository path:
 
-<repositories>
+`<repositories>
         <repository>
             <id>MyGet</id>
             <url>https://www.myget.org/F/bots-crew/maven</url>
         </repository>
-    </repositories>
+    </repositories>`
 
 Add the dependency:
 
-<dependency>
+`<dependency>
             <groupId>com.botscrew</groupId>
             <artifactId>bot-framework-spring-boot-starter</artifactId>
             <version>{bot-framework-version}</version>
-        </dependency>
+        </dependency>`
 
 To start work with bot-framework you need implement
 ChatUser interface in your project.
@@ -33,10 +33,10 @@ bot flow into independent separated handlers. Splitting logic
 is based on 'state' of user, so we can trigger different handlers for 
 different user states. For example:
 
-@Text(states = {"DEFAULT"})
+`@Text(states = {"DEFAULT"})
 public void handleText(ChatUserImpl user, @Text String text) {
 log.info("Text handled: " + text);
-}
+}`
 
 This method will be called for user with state 'DEFAULT'. 
 
@@ -61,54 +61,54 @@ in the next way: STATE?string_param=param?int_param=1?double_param=2.5
 
 You can receive those parameters in your handler in the next way:
 
-@text
+`@Text
 public void handleText(@param("string_param") String stringParam, 
                        @param("int_param") Integer intParam, 
                        @param("double_param") Double param) {
+                   }`
+                   
+                   
 
-                   }
 Usage example:
 
 Text:
 
-@ChatEventsProcessor
+`@ChatEventsProcessor
 public void TextHandler {
     @Text(states={"STATE1", "STATE2"})
     public vodi handle(ChatUserImpl user, @Text String text, @Param("param") Integer param) {
-
     }
-}
+}`
 
 
 
 Location:
 
-@ChatEventsProcessor
+`@ChatEventsProcessor
 public void LocationHandler {
     @Location(states={"STATE1", "STATE2"})
     public vodi handle(ChatUserImpl user, @Location Coordinates coordinates) {
     }
-}
+}`
 
 
 
 Postback:
 
-@ChatEventsProcessor
+`@ChatEventsProcessor
 public void PostbackHandler {
     @Postback(value="POSTBACK", states={"STATE"})
     public vodi handle(ChatUserImpl user, @Param("id") Integer id) {
-
     }
-}
+}`
 
 
 
 Intent:
 
-@IntentProcessor
+`@IntentProcessor
 public void IntentHandler {
     @Text(value="INTENT", states={"STATE1", "STATE2"})
     public vodi handle(ChatUserImpl user, @Param("id") Integer id) {
     }
-}
+}`
