@@ -72,9 +72,9 @@ You can receive those parameters in your handler in the next way:
 
 ```
 @Text
-public void handleText(@param("string_param") String stringParam, 
-                       @param("int_param") Integer intParam, 
-                       @param("double_param") Double param) {
+public void handleText(@Param("string_param") String stringParam, 
+                       @Param("int_param") Integer intParam, 
+                       @Param("double_param") Double param) {
                    }
 ```
 
