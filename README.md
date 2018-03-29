@@ -1,9 +1,9 @@
-**_Bot Framework Spring Boot Starter_**
+# Bot Framework Spring Boot Starter
 
 Bot Framework makes it easier to work with chat bot applications
 based on Spring Boot architecture.
 
-Getting started:
+### Getting started:
 
 To include bot framework to your project 
 you can add dependency to your build configuration
@@ -24,21 +24,23 @@ Add the dependency:
             <artifactId>bot-framework-spring-boot-starter</artifactId>
             <version>{bot-framework-version}</version>
         </dependency>`
+        
+### User
 
-To start work with bot-framework you need implement
-ChatUser interface in your project.
+To start work with bot-framework you need implement ChatUser interface in your project.
 
 The main goal of the project is to help you split up 
 bot flow into independent separated handlers. Splitting logic 
 is based on 'state' of user, so we can trigger different handlers for 
 different user states. For example:
 
-`@Text(states = {"DEFAULT"})
+```
+@Text(states = {"DEFAULT"})
 public void handleText(ChatUserImpl user, @Text String text) {
 log.info("Text handled: " + text);
-}`
-
-This method will be called for user with state 'DEFAULT'. 
+//This method will be called for user with state 'DEFAULT'.
+}
+```
 
 You can define a few states for one method, we will trigger it in case of any of them.
 
