@@ -1,6 +1,5 @@
 package com.botscrew.botframework.container;
 
-import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
@@ -10,6 +9,7 @@ import com.botscrew.botframework.domain.method.group.PostbackHandlingMethodGroup
 import com.botscrew.botframework.domain.method.key.BiMethodKey;
 import com.botscrew.botframework.domain.param.SimpleStringParametersDetector;
 import com.botscrew.botframework.domain.param.StringParametersDetector;
+import com.botscrew.botframework.domain.user.ChatUser;
 
 import java.util.Map;
 import java.util.Optional;

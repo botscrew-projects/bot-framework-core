@@ -5,9 +5,9 @@ import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.annotation.NlpResponse;
 import com.botscrew.botframework.annotation.StateParameters;
 import com.botscrew.botframework.annotation.Text;
-import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.domain.CompositeParameter;
 import com.botscrew.botframework.domain.argument.ArgumentType;
+import com.botscrew.botframework.domain.user.ChatUser;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

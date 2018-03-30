@@ -1,7 +1,6 @@
 package com.botscrew.botframework.configuration.bpp;
 
 import com.botscrew.botframework.annotation.ChatEventsProcessor;
-import com.botscrew.botframework.domain.method.TextHandlingMethod;
 import com.botscrew.botframework.domain.method.group.LocationHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.group.PostbackHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.group.TextHandlingMethodGroup;
