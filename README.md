@@ -10,7 +10,7 @@ based on Spring Boot architecture.
 ##### 3. [*Handlers*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#handlers)
 ##### 4. [*Handlers example*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#handlers-example)
 ##### 5. [*Parameters*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#parameters)
-##### 6. [*Containers usage example*] (https://gitlab.com/bots-crew/bot-framework/edit/boot-starter/README.md#container-usage-example)
+##### 6. [*Containers usage example*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#container-usage-example)
 
 
 
