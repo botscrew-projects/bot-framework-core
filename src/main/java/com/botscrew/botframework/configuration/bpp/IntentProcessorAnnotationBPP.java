@@ -1,7 +1,7 @@
 package com.botscrew.botframework.configuration.bpp;
 
 import com.botscrew.botframework.annotation.IntentProcessor;
-import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.group.impl.IntentHandlingMethodGroup;
 
 import java.util.Collections;
 

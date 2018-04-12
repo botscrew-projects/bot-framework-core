@@ -4,7 +4,7 @@ import com.botscrew.botframework.container.domain.TextHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.argument.wrapper.SimpleArgumentWrapper;
-import com.botscrew.botframework.domain.method.group.TextHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.group.impl.TextHandlingMethodGroup;
 import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.user.ChatUser;
 import org.junit.Test;

@@ -2,12 +2,12 @@ package com.botscrew.botframework.domain.method.key;
 
 import java.util.Objects;
 
-public class BiMethodKey {
+public class StateAndValueMethodKey implements MethodKey {
 
     private final String state;
     private final String stringKey;
 
-    public BiMethodKey(String state, String stringKey) {
+    public StateAndValueMethodKey(String state, String stringKey) {
         this.state = state;
         this.stringKey = stringKey;
     }
@@ -24,7 +24,7 @@ public class BiMethodKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BiMethodKey that = (BiMethodKey) o;
+        StateAndValueMethodKey that = (StateAndValueMethodKey) o;
         return Objects.equals(state, that.state) &&
                 Objects.equals(stringKey, that.stringKey);
     }
@@ -36,7 +36,7 @@ public class BiMethodKey {
 
     @Override
     public String toString() {
-        return "BiMethodKey{" +
+        return "StateAndValueMethodKey{" +
                 "state='" + state + '\'' +
                 ", stringKey='" + stringKey + '\'' +
                 '}';

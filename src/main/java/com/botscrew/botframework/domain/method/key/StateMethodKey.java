@@ -2,7 +2,7 @@ package com.botscrew.botframework.domain.method.key;
 
 import java.util.Objects;
 
-public class StateMethodKey {
+public class StateMethodKey implements MethodKey {
     private final String state;
 
     public StateMethodKey(String state) {

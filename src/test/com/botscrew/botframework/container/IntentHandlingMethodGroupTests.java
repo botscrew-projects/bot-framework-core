@@ -1,8 +1,8 @@
 package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.annotation.Intent;
-import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
-import com.botscrew.botframework.domain.method.key.BiMethodKey;
+import com.botscrew.botframework.domain.method.group.impl.IntentHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.key.StateAndValueMethodKey;
 import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.domain.method.HandlingMethod;
 import org.junit.Before;
@@ -29,7 +29,7 @@ public class IntentHandlingMethodGroupTests {
 
         String state = "state";
         String intent = "default";
-        BiMethodKey key = new BiMethodKey(state, intent);
+        StateAndValueMethodKey key = new StateAndValueMethodKey(state, intent);
 
         Optional<HandlingMethod> instanceMethod = intentMethodGroup.find(key);
 
@@ -45,7 +45,7 @@ public class IntentHandlingMethodGroupTests {
     public void shouldFirstlyLookForIntentMethod() throws Exception {
         intentMethodGroup.register(new ClassWithIntentAndStateMethod());
 
-        BiMethodKey key = new BiMethodKey("STATE1", "INTENT1");
+        StateAndValueMethodKey key = new StateAndValueMethodKey("STATE1", "INTENT1");
         Optional<HandlingMethod> instanceMethod = intentMethodGroup.find(key);
 
         assertTrue(instanceMethod.isPresent());

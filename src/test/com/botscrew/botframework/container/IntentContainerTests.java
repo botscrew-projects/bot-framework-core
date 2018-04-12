@@ -2,7 +2,7 @@ package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.annotation.*;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
-import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
+import com.botscrew.botframework.domain.method.group.impl.IntentHandlingMethodGroup;
 import com.botscrew.botframework.domain.user.ChatUser;
 import com.botscrew.botframework.exception.ProcessorInnerException;
 import org.junit.Before;
@@ -89,7 +89,7 @@ public class IntentContainerTests {
         intentMethodGroup.register(new IntentWithStateParams());
 
 
-        intentContainer.process(() -> "default?key=value", "intent", null);
+        intentContainer.process(() -> "default?key=value", "intent");
 
         assertEquals("value", ((Map<String, String>)params[0]).get("key"));
     }
@@ -107,7 +107,7 @@ public class IntentContainerTests {
     public void shouldPassSpecificStringStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithStringParam());
 
-        intentContainer.process(() -> "default?param=value", "intent", null);
+        intentContainer.process(() -> "default?param=value", "intent");
 
         assertEquals("value", params[0]);
     }
@@ -125,7 +125,7 @@ public class IntentContainerTests {
     public void shouldPassIntStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithIntParam());
 
-        intentContainer.process(() -> "default?param=1", "intent", null);
+        intentContainer.process(() -> "default?param=1", "intent");
 
         assertEquals(1, params[0]);
     }
@@ -143,7 +143,7 @@ public class IntentContainerTests {
     public void shouldPassLongStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithLongParam());
 
-        intentContainer.process(() -> "default?param=1", "intent", null);
+        intentContainer.process(() -> "default?param=1", "intent");
 
         assertEquals(1L, params[0]);
     }
@@ -161,7 +161,7 @@ public class IntentContainerTests {
     public void shouldPassByteStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithByteParam());
 
-        intentContainer.process(() -> "default?param=1", "intent", null);
+        intentContainer.process(() -> "default?param=1", "intent");
 
         byte expected = 1;
         assertEquals(expected, params[0]);
@@ -180,7 +180,7 @@ public class IntentContainerTests {
     public void shouldPassShortStateParamToMethod() throws Exception {
         intentMethodGroup.register(new IntentWithShortParam());
 
-        intentContainer.process(() -> "default?param=1", "intent", null);
+        intentContainer.process(() -> "default?param=1", "intent");
 
         short expected = 1;
         assertEquals(expected, params[0]);

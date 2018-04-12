@@ -9,7 +9,7 @@ public enum ArgumentType {
     TEXT,
     INTENT,
     COORDINATES,
-    NATIVE_NLP_RESPONSE,
+    ORIGINAL_RESPONSE,
     COMPLEX_TYPE,
     UNKNOWN,
 
@@ -19,5 +19,5 @@ public enum ArgumentType {
     PARAM_SHORT,
     PARAM_FLOAT,
     PARAM_DOUBLE,
-    PARAM_LONG
+    REFERRAL, PARAM_LONG
 }

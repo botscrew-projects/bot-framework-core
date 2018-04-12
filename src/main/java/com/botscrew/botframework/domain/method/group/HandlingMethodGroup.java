@@ -1,13 +1,16 @@
 package com.botscrew.botframework.domain.method.group;
 
-public interface HandlingMethodGroup {
+import com.botscrew.botframework.domain.method.HandlingMethod;
+
+import java.util.Optional;
+
+public interface HandlingMethodGroup<K> {
     void register(Object object);
+    Optional<HandlingMethod> find(K key);
 
     class Key {
         private Key() {}
 
-        public static final String ALL_INTENTS = "ALL_INTENTS";
-        public static final String ALL_STATES = "ALL_STATES";
-        public static final String ALL_POSTBACKS = "ALL_POSTBACKS";
+        public static final String ALL = "ALL";
     }
 }

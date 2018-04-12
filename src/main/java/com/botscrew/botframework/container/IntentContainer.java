@@ -2,61 +2,36 @@ package com.botscrew.botframework.container;
 
 import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
-import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.argument.wrapper.SimpleArgumentWrapper;
-import com.botscrew.botframework.domain.method.HandlingMethod;
-import com.botscrew.botframework.domain.method.group.IntentHandlingMethodGroup;
-import com.botscrew.botframework.domain.method.key.BiMethodKey;
-import com.botscrew.botframework.domain.param.SimpleStringParametersDetector;
+import com.botscrew.botframework.domain.method.group.HandlingMethodGroup;
 import com.botscrew.botframework.domain.param.StringParametersDetector;
 import com.botscrew.botframework.domain.user.ChatUser;
 
 import java.util.Map;
-import java.util.Optional;
 
-public class IntentContainer {
+public class IntentContainer extends StateAndValueContainer {
 
-    private final IntentHandlingMethodGroup intentMethodGroup;
-    private final StringParametersDetector stringParametersDetector;
-
-    public IntentContainer(IntentHandlingMethodGroup intentMethodGroup) {
-        stringParametersDetector = new SimpleStringParametersDetector();
-        this.intentMethodGroup = intentMethodGroup;
+    public IntentContainer(HandlingMethodGroup handlingMethodGroup) {
+        super(handlingMethodGroup);
     }
 
-    public IntentContainer(IntentHandlingMethodGroup intentMethodGroup, StringParametersDetector stringParametersDetector) {
-        this.intentMethodGroup = intentMethodGroup;
-        this.stringParametersDetector = stringParametersDetector;
+    public IntentContainer(HandlingMethodGroup handlingMethodGroup, StringParametersDetector stringParametersDetector) {
+        super(handlingMethodGroup, stringParametersDetector);
     }
 
-    public void process(ChatUser user, String intent) {
-        process(user, intent, new SimpleArgumentKit());
-    }
+    @Override
+    void fillArgumentKit(ChatUser user, String value, ArgumentKit kit) {
+        Map<String, String> stateParameters = this.getStringParametersDetector().getParameters(user.getState());
+        Map<String, String> intentParameters = this.getStringParametersDetector().getParameters(value);
 
-    public void process(ChatUser user, String intent, ArgumentKit originalKit) {
-        if (originalKit == null) originalKit = new SimpleArgumentKit();
-        String intentWithoutParams = stringParametersDetector.getValueWithoutParams(intent);
-
-        BiMethodKey key = new BiMethodKey(user.getState(), intentWithoutParams);
-        Optional<HandlingMethod> instanceMethod = intentMethodGroup.find(key);
-
-        if (!instanceMethod.isPresent()) {
-            throw new IllegalArgumentException("No eligible method found for state: " + user.getState() + " and intent: " + intent);
-        }
-        Map<String, String> stateParameters = stringParametersDetector.getParameters(user.getState());
-        Map<String, String> intentParameters = stringParametersDetector.getParameters(intent);
-
-        originalKit.put(ArgumentType.USER, new SimpleArgumentWrapper(user));
-        originalKit.put(ArgumentType.STATE_PARAMETERS, new SimpleArgumentWrapper(stateParameters));
-        originalKit.put(ArgumentType.INTENT, new SimpleArgumentWrapper(intent));
+        kit.put(ArgumentType.USER, new SimpleArgumentWrapper(user));
+        kit.put(ArgumentType.STATE_PARAMETERS, new SimpleArgumentWrapper(stateParameters));
+        kit.put(ArgumentType.INTENT, new SimpleArgumentWrapper(value));
         for (Map.Entry<String, String> entry : stateParameters.entrySet()) {
-            originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
+            kit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }
         for (Map.Entry<String, String> entry : intentParameters.entrySet()) {
-            originalKit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
+            kit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }
-
-        instanceMethod.get().invoke(originalKit);
     }
-
 }
