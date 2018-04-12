@@ -45,7 +45,7 @@ bot flow into independent separated handlers. Splitting logic
 is based on 'state' of user, so we can trigger different handlers for 
 different user states. For example:
 
-```
+```java
 @Text(states = {"DEFAULT"})
 public void handleText(ChatUserImpl user, @Text String text) {
 log.info("Text handled: " + text);
@@ -76,7 +76,7 @@ They are entry points for your events.
 
 * Text:
 
-```
+```java
 @ChatEventsProcessor
 public void TextHandler {
     @Text(states={"STATE1", "STATE2"})
@@ -88,7 +88,7 @@ public void TextHandler {
 
 * Location:
 
-```
+```java
 @ChatEventsProcessor
 public void LocationHandler {
     @Location(states={"STATE1", "STATE2"})
@@ -100,7 +100,7 @@ public void LocationHandler {
 
 * Postback:
 
-```
+```java
 @ChatEventsProcessor
 public void PostbackHandler {
     @Postback(value="POSTBACK", states={"STATE"})
@@ -112,7 +112,7 @@ public void PostbackHandler {
 
 * Intent:
 
-```
+```java
 @IntentProcessor
 public void IntentHandler {
     @Intent(value="INTENT", states={"STATE1", "STATE2"})
@@ -123,44 +123,47 @@ public void IntentHandler {
 
 * Referral:
 
-```
+```java
 @ChatEventsProcessoor
 public void ReferralHandler {
     @Referral(value="advertisement_ref", states={"STATE1", "STATE2"})
-    public void handle(ChatUserImpl user, @Param("id") Integer id) {
+    public void handle(ChatUserImpl user, @Referral String fullRef, @Original Referral referral) {
+        log.info(referral.getSource());
     }
 }
 ```
 
 * Read:
 
-```
+```java
 @ChatEventsProcessoor
-public void ReferralHandler {
+public void ReadHandler {
     @Read(states={})
-    public void handle(ChatUserImpl user) {
+    public void handle(ChatUserImpl user, @Original Read read) {
+        log.info(read.getWatermark());
     }
 }
 ```
 
 * Echo:
 
-```
+```java
 @ChatEventsProcessoor
-public void ReferralHandler {
+public void EchoHandler {
     @Echo(states={})
-    public void handle(ChatUserImpl user) {
+    public void handle(ChatUserImpl user, @Original Message echoMessage) {
+        log.info(echoMessage.getMid());
     }
 }
 ```
 
 * Delivery:
 
-```
+```java
 @ChatEventsProcessoor
-public void ReferralHandler {
+public void DeliveryHandler {
     @Delivery(states={})
-    public void handle(ChatUserImpl user) {
+    public void handle(ChatUserImpl user, @Original Delivery delivery) {
     }
 }
 ```
@@ -172,7 +175,7 @@ in the next way: `STATE?string_param=param?int_param=1?double_param=2.5`
 
 You can receive those parameters in your handler in the next way:
 
-```
+```java
 @Text
 public void handleText(@Param("string_param") String stringParam, 
                        @Param("int_param") Integer intParam, 
@@ -195,7 +198,7 @@ You cannot pass 2 arguments with the same name and 2 arguments with the same typ
 
 * LocationContainer
 
-```
+```java
 @Autowired
 private LocationContainer container;
 
@@ -209,7 +212,7 @@ public void processLocation(User user, Coordinates coordinates) {
 
 * TextContainer
 
-```
+```java
 @Autowired
 private TextContainer container;
 
@@ -223,7 +226,7 @@ public void processText(User user, String text) {
 
 * PostbackContainer
 
-```
+```java
 @Autowired
 private PostbackContainer container;
 
@@ -234,7 +237,7 @@ public void processPostback(User user, String postback) {
 
 * IntentContainer
 
-```
+```java
 @Autowired
 private IntentContainer container;
 
