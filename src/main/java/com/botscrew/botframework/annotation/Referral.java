@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface Referral {
 
     String value() default "";
+
     String[] states() default {};
 }

@@ -23,6 +23,7 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
     }
 
     public abstract List<String> getStates(Annotation annotation);
+
     public abstract HandlingMethod createHandlingMethod(Object object, Method method);
 
     @Override
@@ -54,7 +55,7 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
             for (StateMethodKey key : keys) {
                 if (instanceMethods.containsKey(key)) {
                     throw new MethodSignatureException(String.format("Defined a few methods with %s annotation with key: %s",
-                                    annotation.getClass().toString(), key.toString()));
+                            annotation.getClass().toString(), key.toString()));
                 }
                 instanceMethods.put(key, instanceMethod);
             }

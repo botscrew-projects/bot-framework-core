@@ -37,7 +37,8 @@ public abstract class HandlingMethod {
     private ArgumentsComposer argumentsComposer;
     private List<CompositeParameter> parameters;
 
-    private HandlingMethod() {}
+    private HandlingMethod() {
+    }
 
     public HandlingMethod(Object instance, Method method) {
         this.instance = instance;
@@ -50,7 +51,7 @@ public abstract class HandlingMethod {
 
     private void checkIfMethodIsCorrect() {
         if (!Modifier.isPublic(method.getModifiers())) {
-            LOGGER.warn("Method " + method.getName() + " from " + instance.getClass().toString() + " is not public.");
+            LOGGER.warn("Method {0} from {1} is not public", method.getName(), instance.getClass().toString());
         }
 
         Set<String> names = new HashSet<>();

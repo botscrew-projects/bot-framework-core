@@ -2,7 +2,6 @@ package com.botscrew.botframework.domain.method.group.impl;
 
 import com.botscrew.botframework.annotation.Referral;
 import com.botscrew.botframework.domain.method.HandlingMethod;
-import com.botscrew.botframework.domain.method.IntentHandlingMethod;
 import com.botscrew.botframework.domain.method.ReferralHandlingMethod;
 import com.botscrew.botframework.domain.method.group.StateAndValueHandlingMethodGroup;
 

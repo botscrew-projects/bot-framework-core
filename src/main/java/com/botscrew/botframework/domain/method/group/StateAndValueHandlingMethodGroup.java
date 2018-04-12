@@ -24,7 +24,9 @@ public abstract class StateAndValueHandlingMethodGroup implements HandlingMethod
     }
 
     public abstract List<String> getStates(Annotation annotation);
+
     public abstract String getValue(Annotation annotation);
+
     public abstract HandlingMethod createHandlingMethod(Object object, Method method);
 
     @Override

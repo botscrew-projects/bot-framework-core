@@ -3,7 +3,6 @@ package com.botscrew.botframework.configuration;
 import com.botscrew.botframework.configuration.bpp.ChatEventsProcessorAnnotationBPP;
 import com.botscrew.botframework.configuration.bpp.IntentProcessorAnnotationBPP;
 import com.botscrew.botframework.container.*;
-import com.botscrew.botframework.domain.method.EchoHandlingMethod;
 import com.botscrew.botframework.domain.method.group.impl.*;
 import com.botscrew.botframework.sender.PlatformSender;
 import org.springframework.context.annotation.Bean;

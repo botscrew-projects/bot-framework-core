@@ -6,11 +6,13 @@ import java.util.Optional;
 
 public interface HandlingMethodGroup<K> {
     void register(Object object);
+
     Optional<HandlingMethod> find(K key);
 
     class Key {
-        private Key() {}
-
         public static final String ALL = "ALL";
+
+        private Key() {
+        }
     }
 }
