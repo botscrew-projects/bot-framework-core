@@ -74,15 +74,13 @@ There are next containers available at the moment:
 
 They are entry points for your events.
 
-### Handlers example
-
 * Text:
 
 ```
 @ChatEventsProcessor
 public void TextHandler {
     @Text(states={"STATE1", "STATE2"})
-    public vodi handle(ChatUserImpl user, @Text String text, @Param("param") Integer param) {
+    public void handle(ChatUserImpl user, @Text String text, @Param("param") Integer param) {
     }
 }
 ```
@@ -94,7 +92,7 @@ public void TextHandler {
 @ChatEventsProcessor
 public void LocationHandler {
     @Location(states={"STATE1", "STATE2"})
-    public vodi handle(ChatUserImpl user, @Location Coordinates coordinates) {
+    public void handle(ChatUserImpl user, @Location Coordinates coordinates) {
     }
 }
 ```
@@ -106,7 +104,7 @@ public void LocationHandler {
 @ChatEventsProcessor
 public void PostbackHandler {
     @Postback(value="POSTBACK", states={"STATE"})
-    public vodi handle(ChatUserImpl user, @Param("id") Integer id) {
+    public void handle(ChatUserImpl user, @Param("id") Integer id) {
     }
 }
 ```
@@ -117,8 +115,52 @@ public void PostbackHandler {
 ```
 @IntentProcessor
 public void IntentHandler {
-    @Text(value="INTENT", states={"STATE1", "STATE2"})
-    public vodi handle(ChatUserImpl user, @Param("id") Integer id) {
+    @Intent(value="INTENT", states={"STATE1", "STATE2"})
+    public void handle(ChatUserImpl user, @Param("id") Integer id) {
+    }
+}
+```
+
+* Referral:
+
+```
+@ChatEventsProcessoor
+public void ReferralHandler {
+    @Referral(value="advertisement_ref", states={"STATE1", "STATE2"})
+    public void handle(ChatUserImpl user, @Param("id") Integer id) {
+    }
+}
+```
+
+* Read:
+
+```
+@ChatEventsProcessoor
+public void ReferralHandler {
+    @Read(states={})
+    public void handle(ChatUserImpl user) {
+    }
+}
+```
+
+* Echo:
+
+```
+@ChatEventsProcessoor
+public void ReferralHandler {
+    @Echo(states={})
+    public void handle(ChatUserImpl user) {
+    }
+}
+```
+
+* Delivery:
+
+```
+@ChatEventsProcessoor
+public void ReferralHandler {
+    @Delivery(states={})
+    public void handle(ChatUserImpl user) {
     }
 }
 ```
