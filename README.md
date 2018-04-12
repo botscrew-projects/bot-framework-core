@@ -3,6 +3,17 @@
 Bot Framework makes it easier to work with chat bot applications
 based on Spring Boot architecture.
 
+
+
+##### 1. [*Getting started*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#getting-started-1)
+##### 2. [*User*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#user)
+##### 3. [*Handlers*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#handlers)
+##### 4. [*Handlers example*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#handlers-example)
+##### 5. [*Parameters*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#parameters)
+##### 6. [*Containers usage example*] (https://gitlab.com/bots-crew/bot-framework/blob/boot-starter/README.md#container-usage-example)
+
+
+
 ### Getting started:
 
 To include bot framework to your project 
@@ -63,21 +74,6 @@ There are next containers available at the moment:
 
 They are entry points for your events.
 
-### Parameters
-
-BotFramework support additional parameters which you can pass to state(postback/intent) 
-in the next way: `STATE?string_param=param?int_param=1?double_param=2.5`
-
-You can receive those parameters in your handler in the next way:
-
-```
-@Text
-public void handleText(@Param("string_param") String stringParam, 
-                       @Param("int_param") Integer intParam, 
-                       @Param("double_param") Double param) {
-                   }
-```
-
 ### Handlers example
 
 * Text:
@@ -125,6 +121,21 @@ public void IntentHandler {
     public vodi handle(ChatUserImpl user, @Param("id") Integer id) {
     }
 }
+```
+
+### Parameters
+
+BotFramework support additional parameters which you can pass to state(postback/intent) 
+in the next way: `STATE?string_param=param?int_param=1?double_param=2.5`
+
+You can receive those parameters in your handler in the next way:
+
+```
+@Text
+public void handleText(@Param("string_param") String stringParam, 
+                       @Param("int_param") Integer intParam, 
+                       @Param("double_param") Double param) {
+                   }
 ```
 
 
