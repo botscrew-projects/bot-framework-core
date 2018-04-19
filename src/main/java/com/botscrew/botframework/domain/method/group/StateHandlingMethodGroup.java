@@ -1,7 +1,6 @@
 package com.botscrew.botframework.domain.method.group;
 
 import com.botscrew.botframework.domain.method.HandlingMethod;
-import com.botscrew.botframework.domain.method.group.impl.TextHandlingMethodGroup;
 import com.botscrew.botframework.domain.method.key.StateMethodKey;
 import com.botscrew.botframework.exception.MethodSignatureException;
 import org.slf4j.Logger;
@@ -12,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<StateMethodKey> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextHandlingMethodGroup.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StateHandlingMethodGroup.class);
 
     private final Class<? extends Annotation> annotationType;
     private final Map<StateMethodKey, HandlingMethod> instanceMethods;

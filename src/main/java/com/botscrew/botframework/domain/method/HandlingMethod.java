@@ -50,7 +50,7 @@ public abstract class HandlingMethod {
     }
 
     private void checkIfMethodIsCorrect() {
-        if (!Modifier.isPublic(method.getModifiers())) {
+        if (!Modifier.isPublic(method.getModifiers()) && LOGGER.isWarnEnabled()) {
             LOGGER.warn("Method {0} from {1} is not public", method.getName(), instance.getClass().toString());
         }
 
