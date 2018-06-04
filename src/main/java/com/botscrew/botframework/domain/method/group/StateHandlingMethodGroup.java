@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 BotsCrew
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.botscrew.botframework.domain.method.group;
 
 import com.botscrew.botframework.domain.method.HandlingMethod;
@@ -10,12 +26,20 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * Describes group of methods-handlers which are responsible for handling some type of events
+ *
+ */
 public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<StateMethodKey> {
     private static final Logger LOGGER = LoggerFactory.getLogger(StateHandlingMethodGroup.class);
 
     private final Class<? extends Annotation> annotationType;
     private final Map<StateMethodKey, HandlingMethod> instanceMethods;
 
+    /**
+     *
+     * @param annotationType Annotation of event which this group handles(f.e. {@link com.botscrew.botframework.annotation.Text}
+     */
     public StateHandlingMethodGroup(Class<? extends Annotation> annotationType) {
         this.annotationType = annotationType;
         instanceMethods = new HashMap<>();
@@ -25,6 +49,10 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
 
     public abstract HandlingMethod createHandlingMethod(Object object, Method method);
 
+    /**
+     * Use this method to register class instance which contains methods with specified annotation
+     * @param object
+     */
     @Override
     public void register(Object object) {
         Method[] methods = object.getClass().getMethods();
@@ -34,6 +62,9 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
         }
     }
 
+    /**
+     * Gives you ability to look for the appropriate method
+     */
     @Override
     public Optional<HandlingMethod> find(StateMethodKey key) {
         HandlingMethod byState = instanceMethods.get(key);
@@ -58,7 +89,7 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
                 }
                 instanceMethods.put(key, instanceMethod);
             }
-            LOGGER.debug("Text handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");
+            LOGGER.debug("Handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");
         }
     }
 
