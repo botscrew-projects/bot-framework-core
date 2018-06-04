@@ -20,6 +20,9 @@ package com.botscrew.botframework.domain.user;
  * Interface for channel of communication with some user or group of users
  */
 public interface Bot {
+    /**
+     * Returns platform specific to this channel(bot)
+     */
     Platform getPlatform();
 
 }

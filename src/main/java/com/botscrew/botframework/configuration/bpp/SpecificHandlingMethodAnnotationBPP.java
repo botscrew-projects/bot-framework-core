@@ -29,10 +29,22 @@ import java.util.List;
  * @see com.botscrew.botframework.annotation.IntentProcessor
  */
 public abstract class SpecificHandlingMethodAnnotationBPP implements BeanPostProcessor {
+    /**
+     * Class-level annotation. BPP will look for classes annotated with it.
+     */
     private final Class<? extends Annotation> annotation;
+    /**
+     * List of handling-method groups types available for registering annotated methods
+     */
     private final List<Class<? extends HandlingMethodGroup>> handlingMethodGroupTypes;
 
+    /**
+     * List of handling method groups found during startup, where we will register found annotated beans
+     */
     private List<HandlingMethodGroup> handlingMethodGroups;
+    /**
+     * List of annotated beans
+     */
     private List<Object> processors;
 
     public SpecificHandlingMethodAnnotationBPP(Class<? extends Annotation> annotation, List<Class<? extends HandlingMethodGroup>> handlingMethodGroupTypes) {

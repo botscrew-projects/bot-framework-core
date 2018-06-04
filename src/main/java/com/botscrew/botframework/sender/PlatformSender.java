@@ -34,6 +34,9 @@ public class PlatformSender implements Sender<Bot, Message> {
         this.platformSenders = new EnumMap<>(Platform.class);
     }
 
+    /**
+     * Register sender for specific platform
+     */
     public void addSender(Platform platform, Sender sender) {
         platformSenders.put(platform, sender);
     }

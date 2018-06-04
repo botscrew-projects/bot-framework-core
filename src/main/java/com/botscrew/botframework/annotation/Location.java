@@ -31,5 +31,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({METHOD, PARAMETER})
 public @interface Location {
+    /**
+     * Annotated method will be triggered if a user is in one of these states.
+     * @see com.botscrew.botframework.domain.user.ChatUser
+     */
     String[] states() default {};
 }

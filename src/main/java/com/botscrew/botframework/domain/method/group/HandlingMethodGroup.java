@@ -20,9 +20,19 @@ import com.botscrew.botframework.domain.method.HandlingMethod;
 
 import java.util.Optional;
 
+/**
+ * Describes group of methods applicable for handling specific type of events
+ * @param <K> Key types for comparing handling methods
+ */
 public interface HandlingMethodGroup<K> {
+    /**
+     * Will register specific object which can contain appropriate handling methods
+     */
     void register(Object object);
 
+    /**
+     * @return Handling method by key if it is registered or Optional.empty() if not
+     */
     Optional<HandlingMethod> find(K key);
 
     class Key {

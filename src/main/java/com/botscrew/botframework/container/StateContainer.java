@@ -48,10 +48,18 @@ public abstract class StateContainer {
         this.stringParametersDetector = stringParametersDetector;
     }
 
+    /**
+     * Entry point for specific events, will create empty argument kit
+     * @see ArgumentKit
+     * @see ChatUser
+     */
     public void process(ChatUser user) {
         process(user, new SimpleArgumentKit());
     }
 
+    /**
+     * Entry point for specific events, accepts argument kit and adds additional parameters to it.
+     */
     public void process(ChatUser user, ArgumentKit originalKit) {
         String stateWithoutParams = stringParametersDetector.getValueWithoutParams(user.getState());
         StateMethodKey key = new StateMethodKey(stateWithoutParams);

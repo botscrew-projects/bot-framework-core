@@ -25,5 +25,8 @@ import com.botscrew.botframework.domain.user.Bot;
  */
 public interface Sender<B extends Bot, M extends Message> {
 
+    /**
+     * Sends message to specified channel(Bot)
+     */
     void send(B bot, M message);
 }

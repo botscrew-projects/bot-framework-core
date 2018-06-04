@@ -23,7 +23,16 @@ import java.util.Map;
  */
 public interface StringParametersDetector {
 
+    /**
+     * @param withParams Original string value
+     * @return Original value without params if present
+     */
     String getValueWithoutParams(String withParams);
 
+    /**
+     *
+     * @param baseValue Original string value
+     * @return Map of parameters from the original value
+     */
     Map<String, String> getParameters(String baseValue);
 }

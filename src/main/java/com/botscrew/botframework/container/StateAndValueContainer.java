@@ -47,10 +47,17 @@ public abstract class StateAndValueContainer {
 
     abstract void fillArgumentKit(ChatUser user, String value, ArgumentKit kit);
 
+    /**
+     * Entry point for specific events
+     * Accepts original value, will create empty argument kit
+     */
     public void process(ChatUser user, String value) {
         process(user, value, new SimpleArgumentKit());
     }
 
+    /**
+     * Entry point for specific events
+     */
     public void process(ChatUser user, String value, ArgumentKit originalKit) {
         String valueWithoutParams = stringParametersDetector.getValueWithoutParams(value);
 

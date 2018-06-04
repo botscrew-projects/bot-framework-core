@@ -29,5 +29,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface Read {
 
+    /**
+     * Annotated method will be triggered if a user is in one of these states.
+     * @see com.botscrew.botframework.domain.user.ChatUser
+     */
     String[] states() default {};
 }

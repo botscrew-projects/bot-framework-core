@@ -18,6 +18,9 @@ package com.botscrew.botframework.domain.method.key;
 
 import java.util.Objects;
 
+/**
+ * Key which compares methods by user state
+ */
 public class StateMethodKey implements MethodKey {
     private final String state;
 

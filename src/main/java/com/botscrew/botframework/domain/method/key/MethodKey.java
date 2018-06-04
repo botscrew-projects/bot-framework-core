@@ -16,5 +16,8 @@
 
 package com.botscrew.botframework.domain.method.key;
 
+/**
+ * Interface marker, use implementations for comparing event handling methods
+ */
 public interface MethodKey {
 }

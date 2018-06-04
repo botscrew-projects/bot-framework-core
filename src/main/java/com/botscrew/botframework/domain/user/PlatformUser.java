@@ -21,5 +21,8 @@ package com.botscrew.botframework.domain.user;
  * @see Bot
  */
 public interface PlatformUser extends ChatUser {
+    /**
+     * @return communication channel(bot) with a user
+     */
     Bot getBot();
 }

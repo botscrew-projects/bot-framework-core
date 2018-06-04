@@ -20,5 +20,8 @@ package com.botscrew.botframework.domain.user;
  * Defines `User` of messenger platform which has `state` which describes in which step of conversation a user is now
  */
 public interface ChatUser {
+    /**
+     * @return current user state
+     */
     String getState();
 }
