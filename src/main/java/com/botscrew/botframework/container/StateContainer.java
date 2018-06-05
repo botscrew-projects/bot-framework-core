@@ -50,6 +50,7 @@ public abstract class StateContainer {
 
     /**
      * Entry point for specific events, will create empty argument kit
+     * @param user User associated with an event
      * @see ArgumentKit
      * @see ChatUser
      */
@@ -59,6 +60,8 @@ public abstract class StateContainer {
 
     /**
      * Entry point for specific events, accepts argument kit and adds additional parameters to it.
+     * @param user User associated with an event
+     * @param originalKit Set of additional available arguments for passing to target method
      */
     public void process(ChatUser user, ArgumentKit originalKit) {
         String stateWithoutParams = stringParametersDetector.getValueWithoutParams(user.getState());

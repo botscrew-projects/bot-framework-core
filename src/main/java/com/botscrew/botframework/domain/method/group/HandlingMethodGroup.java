@@ -27,11 +27,13 @@ import java.util.Optional;
 public interface HandlingMethodGroup<K> {
     /**
      * Will register specific object which can contain appropriate handling methods
+     * @param object Object with methods available for registering
      */
     void register(Object object);
 
     /**
      * @return Handling method by key if it is registered or Optional.empty() if not
+     * @param key Specific method key
      */
     Optional<HandlingMethod> find(K key);
 

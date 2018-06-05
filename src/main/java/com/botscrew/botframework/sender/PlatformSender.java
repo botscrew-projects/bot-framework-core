@@ -36,6 +36,8 @@ public class PlatformSender implements Sender<Bot, Message> {
 
     /**
      * Register sender for specific platform
+     * @param platform platform where this sender sends messages
+     * @param sender {@link Sender} implementation for specific platform
      */
     public void addSender(Platform platform, Sender sender) {
         platformSenders.put(platform, sender);

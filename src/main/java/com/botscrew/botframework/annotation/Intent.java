@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 public @interface Intent {
 
     /**
-     * Original intent name
+     * @return Original intent name
      * Annotated method will be triggered if actual value is equal to it and there is no more specific method.
      */
     String value() default "";
@@ -39,6 +39,7 @@ public @interface Intent {
     /**
      * Annotated method will be triggered if a user is in one of these states and there is no more specific method.
      * @see com.botscrew.botframework.domain.user.ChatUser
+     * @return List of possible user states
      */
     String[] states() default {};
 }

@@ -34,6 +34,7 @@ public @interface Location {
     /**
      * Annotated method will be triggered if a user is in one of these states.
      * @see com.botscrew.botframework.domain.user.ChatUser
+     * @return List of possible user states
      */
     String[] states() default {};
 }

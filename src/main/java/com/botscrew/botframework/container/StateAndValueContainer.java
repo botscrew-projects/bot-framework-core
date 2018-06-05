@@ -50,6 +50,8 @@ public abstract class StateAndValueContainer {
     /**
      * Entry point for specific events
      * Accepts original value, will create empty argument kit
+     * @param user User associated with an event
+     * @param value Original event key value(with parameters)
      */
     public void process(ChatUser user, String value) {
         process(user, value, new SimpleArgumentKit());
@@ -57,6 +59,9 @@ public abstract class StateAndValueContainer {
 
     /**
      * Entry point for specific events
+     * @param user User associated with an event
+     * @param value Original event key value(with parameters)
+     * @param originalKit Set of additional available arguments for passing to target method
      */
     public void process(ChatUser user, String value, ArgumentKit originalKit) {
         String valueWithoutParams = stringParametersDetector.getValueWithoutParams(value);

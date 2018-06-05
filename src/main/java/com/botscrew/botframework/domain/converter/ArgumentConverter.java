@@ -17,7 +17,7 @@
 package com.botscrew.botframework.domain.converter;
 
 /**
- * Describes logic for converting some type of argument to another(f.e. String -> Integer)
+ * Describes logic for converting some type of argument to another(f.e. `String - Integer`)
  * @see com.botscrew.botframework.domain.converter.impl.StringToIntegerConverter
  * @see com.botscrew.botframework.domain.converter.impl.StringToDoubleConverter
  * @param <F> type from which we will convert

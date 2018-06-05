@@ -51,7 +51,7 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
 
     /**
      * Use this method to register class instance which contains methods with specified annotation
-     * @param object
+     * @param object Object with methods available for registering
      */
     @Override
     public void register(Object object) {

@@ -18,12 +18,13 @@ package com.botscrew.botframework.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Map;
 
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * This annotation applicable to Map<String, String> parameter type
+ * This annotation applicable to {@link Map} parameter type with String key and String value
  * Indicates that all parameters from state should be converted to a map and passed to this parameter
  */
 @Retention(RUNTIME)

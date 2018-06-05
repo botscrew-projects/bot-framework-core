@@ -48,6 +48,7 @@ public class ArgumentsComposerFactory {
 
     /**
      * Adds converter to all {@link ArgumentsComposer} created from this Factory
+     * @param converter {@link ArgumentConverter} implementation for specific types
      */
     public static void putConverter(ArgumentConverter converter) {
         converters.put(converter.getKey(), converter);

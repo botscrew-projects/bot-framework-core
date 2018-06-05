@@ -27,6 +27,9 @@ public interface Sender<B extends Bot, M extends Message> {
 
     /**
      * Sends message to specified channel(Bot)
+     * @param bot channel(bot) where to send message
+     * @param message {@link Message} implementation which describes message structure for
+     *                               specific chat platform
      */
     void send(B bot, M message);
 }

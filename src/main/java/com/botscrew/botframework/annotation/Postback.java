@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 public @interface Postback {
 
     /**
-     * Original postback value
+     * @return original postback value
      * Annotated method will be triggered if actual value is equal to it and there is no more specific method.
      */
     String value() default "";
@@ -38,6 +38,7 @@ public @interface Postback {
     /**
      * Annotated method will be triggered if a user is in one of these states and there is no more specific method.
      * @see com.botscrew.botframework.domain.user.ChatUser
+     * @return List of possible user states
      */
     String[] states() default {};
 }

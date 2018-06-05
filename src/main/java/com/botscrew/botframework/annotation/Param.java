@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 public @interface Param {
 
     /**
-     * The value defines original parameter name
+     * @return The value that defines original parameter name
      */
     String value();
 }

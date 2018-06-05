@@ -21,7 +21,7 @@ package com.botscrew.botframework.domain.user;
  */
 public interface Bot {
     /**
-     * Returns platform specific to this channel(bot)
+     * @return platform specific to this channel(bot)
      */
     Platform getPlatform();
 
