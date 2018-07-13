@@ -65,8 +65,9 @@ public abstract class StateAndValueContainer {
      */
     public void process(ChatUser user, String value, ArgumentKit originalKit) {
         String valueWithoutParams = stringParametersDetector.getValueWithoutParams(value);
+        String stateWithoutParams = stringParametersDetector.getValueWithoutParams(user.getState());
 
-        StateAndValueMethodKey key = new StateAndValueMethodKey(user.getState(), valueWithoutParams);
+        StateAndValueMethodKey key = new StateAndValueMethodKey(stateWithoutParams, valueWithoutParams);
         Optional<HandlingMethod> instanceMethod = handlingMethodGroup.find(key);
 
         if (!instanceMethod.isPresent()) {
