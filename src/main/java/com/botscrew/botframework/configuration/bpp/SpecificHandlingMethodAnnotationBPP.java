@@ -17,7 +17,7 @@
 package com.botscrew.botframework.configuration.bpp;
 
 import com.botscrew.botframework.domain.method.group.HandlingMethodGroup;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -25,10 +25,11 @@ import java.util.List;
 
 /**
  * Contains logic of looking for beans annotated as `Processors`
+ *
  * @see com.botscrew.botframework.annotation.ChatEventsProcessor
  * @see com.botscrew.botframework.annotation.IntentProcessor
  */
-public abstract class SpecificHandlingMethodAnnotationBPP implements BeanPostProcessor {
+public abstract class SpecificHandlingMethodAnnotationBPP implements InstantiationAwareBeanPostProcessor {
     /**
      * Class-level annotation. BPP will look for classes annotated with it.
      */
@@ -47,7 +48,8 @@ public abstract class SpecificHandlingMethodAnnotationBPP implements BeanPostPro
      */
     private List<Object> processors;
 
-    public SpecificHandlingMethodAnnotationBPP(Class<? extends Annotation> annotation, List<Class<? extends HandlingMethodGroup>> handlingMethodGroupTypes) {
+    public SpecificHandlingMethodAnnotationBPP(Class<? extends Annotation> annotation,
+                                               List<Class<? extends HandlingMethodGroup>> handlingMethodGroupTypes) {
         this.annotation = annotation;
         this.handlingMethodGroupTypes = handlingMethodGroupTypes;
         handlingMethodGroups = new ArrayList<>();
@@ -55,22 +57,16 @@ public abstract class SpecificHandlingMethodAnnotationBPP implements BeanPostPro
     }
 
     @Override
-    public Object postProcessBeforeInitialization(Object o, String s) {
-        return o;
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object o, String s) {
-        if (o instanceof HandlingMethodGroup && handlingMethodGroupTypes.contains(o.getClass())) {
-            HandlingMethodGroup handlingMethodGroup = (HandlingMethodGroup) o;
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) {
+        if (bean instanceof HandlingMethodGroup && handlingMethodGroupTypes.contains(bean.getClass())) {
+            HandlingMethodGroup handlingMethodGroup = (HandlingMethodGroup) bean;
             handlingMethodGroups.add(handlingMethodGroup);
             processors.forEach(handlingMethodGroup::register);
-            return o;
         }
-        if (o.getClass().isAnnotationPresent(annotation)) {
-            processors.add(o);
-            handlingMethodGroups.forEach(hmg -> hmg.register(o));
+        if (bean.getClass().isAnnotationPresent(annotation)) {
+            processors.add(bean);
+            handlingMethodGroups.forEach(hmg -> hmg.register(bean));
         }
-        return o;
+        return true;
     }
 }
