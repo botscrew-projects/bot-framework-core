@@ -16,25 +16,21 @@
 
 package com.botscrew.botframework.exception;
 
-/**
- * Base exception for errors which happened inside Bot Framework
- */
-public class ProcessorInnerException extends RuntimeException {
+public class ConvertException extends BotFrameworkException {
 
-    public ProcessorInnerException() {
+    public ConvertException() {
         super();
     }
 
-    public ProcessorInnerException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ProcessorInnerException(String message) {
+    public ConvertException(String message) {
         super(message);
     }
 
-    public ProcessorInnerException(Throwable cause) {
-        super(cause);
+    public ConvertException(String message, Throwable cause) {
+        super(message, cause);
     }
 
+    public ConvertException(Throwable cause) {
+        super(cause);
+    }
 }

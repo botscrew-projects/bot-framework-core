@@ -21,8 +21,8 @@ import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.argument.composer.ArgumentsComposer;
 import com.botscrew.botframework.domain.argument.composer.ArgumentsComposerFactory;
 import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
+import com.botscrew.botframework.exception.BotFrameworkException;
 import com.botscrew.botframework.exception.MethodSignatureException;
-import com.botscrew.botframework.exception.ProcessorInnerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +96,7 @@ public abstract class HandlingMethod {
             Object[] args = argumentsComposer.compose(kit);
             method.invoke(instance, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new ProcessorInnerException("Cannot process instance method", e);
+            throw new BotFrameworkException("Cannot process instance method", e);
         }
     }
 

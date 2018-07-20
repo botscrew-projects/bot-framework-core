@@ -16,24 +16,21 @@
 
 package com.botscrew.botframework.exception;
 
-/**
- * Exception for incorrect method signature. F. e. bad parameter, etc.
- */
-public class MethodSignatureException extends BotFrameworkException {
+public class BotFrameworkException extends RuntimeException {
 
-    public MethodSignatureException() {
+    public BotFrameworkException() {
         super();
     }
 
-    public MethodSignatureException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MethodSignatureException(String message) {
+    public BotFrameworkException(String message) {
         super(message);
     }
 
-    public MethodSignatureException(Throwable cause) {
+    public BotFrameworkException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public BotFrameworkException(Throwable cause) {
         super(cause);
     }
 }

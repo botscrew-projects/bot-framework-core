@@ -21,7 +21,7 @@ import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
 import com.botscrew.botframework.domain.argument.wrapper.ArgumentWrapper;
 import com.botscrew.botframework.domain.converter.ArgumentConverter;
 import com.botscrew.botframework.domain.converter.ConverterKey;
-import com.botscrew.botframework.exception.ProcessorInnerException;
+import com.botscrew.botframework.exception.ConvertException;
 
 import java.util.List;
 import java.util.Map;
@@ -71,7 +71,7 @@ public class ArgumentsComposer {
 
         ArgumentConverter argumentConverter = converters.get(ConverterKey.of(value.getClass(), parameter.getType()));
         if (argumentConverter == null) {
-            throw new ProcessorInnerException("Cannot convert type: " + value.getClass().toString() +
+            throw new ConvertException("Cannot convert type: " + value.getClass().toString() +
                     " to: " + parameter.getOriginalType().toString());
         }
 
