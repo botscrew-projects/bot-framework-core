@@ -23,7 +23,7 @@ import java.util.Map;
  * Default implementation for {@link StringParametersDetector}
  * This implementation defines argument as value and array of parameters parted with `?`(parameters also parted with `?`)
  * Each parameter key and value parted with `=`
- *
+ * <p>
  * It looks like that: SIMPLE_NAME?first_key=FIRST_VALUE?second_key=SECOND_VALUE
  * And with will parted as:
  * Value without params: SIMPLE_NAME
@@ -93,5 +93,13 @@ public class SimpleStringParametersDetector implements StringParametersDetector 
         int spliteratorIndex = parametersString.indexOf(spliterator);
         int endIndex = spliteratorIndex < 0 ? parametersString.length() : spliteratorIndex;
         return parametersString.substring(parametersString.indexOf(equalitySign) + 1, endIndex);
+    }
+
+    public String getEqualitySign() {
+        return equalitySign;
+    }
+
+    public String getSpliterator() {
+        return spliterator;
     }
 }

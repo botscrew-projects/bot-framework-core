@@ -5,6 +5,7 @@ import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.argument.wrapper.SimpleArgumentWrapper;
 import com.botscrew.botframework.domain.argument.ArgumentType;
+import com.botscrew.botframework.exception.BotFrameworkException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.mock;
 public class ArgumentsComposerTests {
 
 
-    @Test(expected = ProcessorInnerException.class)
+    @Test(expected = BotFrameworkException.class)
     public void shouldThrowExceptionIfNoApplicableConverter() {
         Parameter param = TestClass.class.getMethods()[0].getParameters()[0];
 
