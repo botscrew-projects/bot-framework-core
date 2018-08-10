@@ -24,4 +24,12 @@ public class Coordinates {
     public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
+
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
+                '}';
+    }
 }
