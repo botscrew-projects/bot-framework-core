@@ -18,18 +18,31 @@ package com.botscrew.botframework.sender;
 
 import com.botscrew.botframework.domain.user.Bot;
 
+import java.util.concurrent.ScheduledFuture;
+
 /**
  * Component responsible for sending messages to chat platforms
+ *
  * @param <B> defines communication channel with user(page from `Facebook Messenger`, etc)
  * @param <M> defines type for messages which we can send to the platform
  */
 public interface Sender<B extends Bot, M extends Message> {
-
     /**
      * Sends message to specified channel(Bot)
-     * @param bot channel(bot) where to send message
+     *
+     * @param bot     channel(bot) where to send message
      * @param message {@link Message} implementation which describes message structure for
-     *                               specific chat platform
+     *                specific chat platform
      */
     void send(B bot, M message);
+
+    /**
+     * Sends message after specified delay
+     *
+     * @param bot     channel(bot) where to send message
+     * @param message {@link Message} implementation which describes message structure for
+     *                specific chat platform
+     * @param delay   time period in milliseconds
+     */
+    ScheduledFuture send(B bot, M message, int delay);
 }

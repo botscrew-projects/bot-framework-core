@@ -24,6 +24,7 @@ import com.botscrew.botframework.sender.PlatformSender;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * Contains all bean definitions needed for Bot Framework
@@ -141,5 +142,13 @@ public class BotFrameworkConfiguration {
     @ConditionalOnMissingBean(PlatformSender.class)
     public PlatformSender platformSender() {
         return new PlatformSender();
+    }
+
+    @Bean
+    public ThreadPoolTaskScheduler senderTaskScheduler() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setPoolSize(5);
+        scheduler.initialize();
+        return scheduler;
     }
 }
