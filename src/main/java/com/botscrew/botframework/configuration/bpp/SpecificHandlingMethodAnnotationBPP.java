@@ -20,6 +20,7 @@ import com.botscrew.botframework.domain.method.group.HandlingMethodGroup;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
