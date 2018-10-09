@@ -5,6 +5,7 @@
 
 	<groupId>com.botscrew</groupId>
 	<artifactId>bot-framework-core-spring-boot-starter</artifactId>
+	<!--UPDATE VERSION ALSO IN META-INF/banner.txt-->
 	<version>1.2.0</version>
 	<packaging>jar</packaging>
 
