@@ -49,11 +49,27 @@ public abstract class StateAndValueHandlingMethodGroup implements HandlingMethod
     public abstract HandlingMethod createHandlingMethod(Object object, Method method);
 
     @Override
-    public void register(Object object) {
-        Method[] methods = object.getClass().getMethods();
+    public Optional<Annotation> getApplicableAnnotation(Method method) {
+        if (method.isAnnotationPresent(annotationType)) {
+            return Optional.of(method.getAnnotation(annotationType));
+        }
+        else return Optional.empty();
+    }
 
-        for (Method method : methods) {
-            registerIfAnnotationPresent(object, method);
+    @Override
+    public void register(Annotation annotation, Object instance, Method method) {
+        if (method.isAnnotationPresent(annotationType)) {
+            List<StateAndValueMethodKey> keys = generateKeys(getStates(annotation), getValue(annotation));
+            HandlingMethod instanceMethod = createHandlingMethod(instance, method);
+
+            for (StateAndValueMethodKey key : keys) {
+                if (instanceMethods.containsKey(key)) {
+                    throw new MethodSignatureException(
+                            String.format("Defined a few methods with %s annotation with key: %s", annotation.getClass().toString(), key.toString()));
+                }
+                instanceMethods.put(key, instanceMethod);
+            }
+            LOGGER.debug("Handler registered: " + instance.getClass().getName() + " -> " + method.getName() + "()");
         }
     }
 
@@ -76,23 +92,6 @@ public abstract class StateAndValueHandlingMethodGroup implements HandlingMethod
 
         HandlingMethod defaultMethod = instanceMethods.get(new StateAndValueMethodKey(HandlingMethodGroup.Key.ALL, HandlingMethodGroup.Key.ALL));
         return Optional.ofNullable(defaultMethod);
-    }
-
-    private void registerIfAnnotationPresent(Object object, Method method) {
-        if (method.isAnnotationPresent(annotationType)) {
-            Annotation annotation = method.getAnnotation(annotationType);
-            List<StateAndValueMethodKey> keys = generateKeys(getStates(annotation), getValue(annotation));
-            HandlingMethod instanceMethod = createHandlingMethod(object, method);
-
-            for (StateAndValueMethodKey key : keys) {
-                if (instanceMethods.containsKey(key)) {
-                    throw new MethodSignatureException(
-                            String.format("Defined a few methods with %s annotation with key: %s", annotation.getClass().toString(), key.toString()));
-                }
-                instanceMethods.put(key, instanceMethod);
-            }
-            LOGGER.debug("Postback handler registered: " + object.getClass().getName() + " -> " + method.getName() + "()");
-        }
     }
 
     private List<StateAndValueMethodKey> generateKeys(List<String> states, String value) {

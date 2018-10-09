@@ -28,7 +28,6 @@ import java.util.*;
 
 /**
  * Describes group of methods-handlers which are responsible for handling some type of events
- *
  */
 public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<StateMethodKey> {
     private static final Logger LOGGER = LoggerFactory.getLogger(StateHandlingMethodGroup.class);
@@ -37,7 +36,6 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
     private final Map<StateMethodKey, HandlingMethod> instanceMethods;
 
     /**
-     *
      * @param annotationType Annotation of event which this group handles(f.e. {@link com.botscrew.botframework.annotation.Text}
      */
     public StateHandlingMethodGroup(Class<? extends Annotation> annotationType) {
@@ -49,16 +47,27 @@ public abstract class StateHandlingMethodGroup implements HandlingMethodGroup<St
 
     public abstract HandlingMethod createHandlingMethod(Object object, Method method);
 
-    /**
-     * Use this method to register class instance which contains methods with specified annotation
-     * @param object Object with methods available for registering
-     */
     @Override
-    public void register(Object object) {
-        Method[] methods = object.getClass().getMethods();
+    public Optional<Annotation> getApplicableAnnotation(Method method) {
+        if (method.isAnnotationPresent(annotationType)) {
+            return Optional.of(method.getAnnotation(annotationType));
+        } else return Optional.empty();
+    }
 
-        for (Method method : methods) {
-            registerIfAnnotationPresent(object, method);
+    @Override
+    public void register(Annotation annotation, Object instance, Method method) {
+        if (method.isAnnotationPresent(annotationType)) {
+            List<StateMethodKey> keys = generateKeys(getStates(annotation));
+            HandlingMethod instanceMethod = createHandlingMethod(instance, method);
+
+            for (StateMethodKey key : keys) {
+                if (instanceMethods.containsKey(key)) {
+                    throw new MethodSignatureException(
+                            String.format("Defined a few methods with %s annotation with key: %s", annotation.getClass().toString(), key.toString()));
+                }
+                instanceMethods.put(key, instanceMethod);
+            }
+            LOGGER.debug("Handler registered: " + instance.getClass().getName() + " -> " + method.getName() + "()");
         }
     }
 

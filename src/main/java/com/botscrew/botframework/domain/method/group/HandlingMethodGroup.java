@@ -18,6 +18,8 @@ package com.botscrew.botframework.domain.method.group;
 
 import com.botscrew.botframework.domain.method.HandlingMethod;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 /**
@@ -25,11 +27,13 @@ import java.util.Optional;
  * @param <K> Key types for comparing handling methods
  */
 public interface HandlingMethodGroup<K> {
+    Optional<Annotation> getApplicableAnnotation(Method method);
+
     /**
-     * Will register specific object which can contain appropriate handling methods
-     * @param object Object with methods available for registering
+     * Will register specific method as handler
+     * @param method Object with methods available for registering
      */
-    void register(Object object);
+    void register(Annotation annotation, Object instance, Method method);
 
     /**
      * @return Handling method by key if it is registered or Optional.empty() if not

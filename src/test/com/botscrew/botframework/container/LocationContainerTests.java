@@ -1,16 +1,20 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.annotation.Location;
 import com.botscrew.botframework.container.domain.GeoCoordinates;
 import com.botscrew.botframework.container.domain.LocationHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
 import com.botscrew.botframework.domain.argument.kit.ArgumentKit;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.argument.wrapper.SimpleArgumentWrapper;
+import com.botscrew.botframework.domain.method.group.HandlingMethodGroup;
 import com.botscrew.botframework.domain.method.group.impl.LocationHandlingMethodGroup;
 import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.user.ChatUser;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -138,11 +142,20 @@ public class LocationContainerTests {
         LocationHandlerImpl handler = new LocationHandlerImpl();
         List<Object> arguments = new ArrayList<>();
         handler.addFollower(args -> arguments.addAll(Arrays.asList(args)));
-        locationHandlingMethodGroup.register(handler);
+
+        register(locationHandlingMethodGroup, handler, Location.class);
 
         ArgumentKit kit = new SimpleArgumentKit();
         kit.put(ArgumentType.COORDINATES, new SimpleArgumentWrapper(location));
         locationContainer.process(user, kit);
         return arguments;
+    }
+
+    private void register(HandlingMethodGroup group, Object handler, Class<? extends Annotation> annotationType) {
+        for (Method method : handler.getClass().getMethods()) {
+            if (method.isAnnotationPresent(annotationType)) {
+                group.register(method.getAnnotation(annotationType), handler, method);
+            }
+        }
     }
 }

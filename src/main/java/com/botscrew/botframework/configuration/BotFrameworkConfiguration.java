@@ -16,12 +16,12 @@
 
 package com.botscrew.botframework.configuration;
 
-import com.botscrew.botframework.configuration.bpp.ChatEventsProcessorAnnotationBPP;
-import com.botscrew.botframework.configuration.bpp.IntentProcessorAnnotationBPP;
+import com.botscrew.botframework.configuration.bpp.BotFrameworkApplicationReadyListener;
 import com.botscrew.botframework.container.*;
 import com.botscrew.botframework.domain.method.group.impl.*;
 import com.botscrew.botframework.sender.PlatformSender;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -33,13 +33,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 public class BotFrameworkConfiguration {
 
     @Bean
-    public ChatEventsProcessorAnnotationBPP postbackContainerBPP() {
-        return new ChatEventsProcessorAnnotationBPP();
-    }
-
-    @Bean
-    public IntentProcessorAnnotationBPP intentProcessorAnnotationBPP() {
-        return new IntentProcessorAnnotationBPP();
+    public BotFrameworkApplicationReadyListener botFrameworkApplicationReadyListener(ApplicationContext context) {
+        return new BotFrameworkApplicationReadyListener(context);
     }
 
     @Bean

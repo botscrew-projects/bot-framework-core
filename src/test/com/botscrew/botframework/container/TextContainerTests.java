@@ -1,14 +1,18 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.annotation.Text;
 import com.botscrew.botframework.container.domain.TextHandlerImpl;
 import com.botscrew.botframework.container.domain.UserImpl;
 import com.botscrew.botframework.domain.argument.kit.SimpleArgumentKit;
 import com.botscrew.botframework.domain.argument.wrapper.SimpleArgumentWrapper;
+import com.botscrew.botframework.domain.method.group.HandlingMethodGroup;
 import com.botscrew.botframework.domain.method.group.impl.TextHandlingMethodGroup;
 import com.botscrew.botframework.domain.argument.ArgumentType;
 import com.botscrew.botframework.domain.user.ChatUser;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -131,12 +135,20 @@ public class TextContainerTests {
         TextHandlerImpl textHandler = new TextHandlerImpl();
         List<Object> arguments = new ArrayList<>();
         textHandler.addFollower(args -> arguments.addAll(Arrays.asList(args)));
-        textHandlingMethodGroup.register(textHandler);
+        register(textHandlingMethodGroup, textHandler, Text.class);
 
         SimpleArgumentKit argumentKit = new SimpleArgumentKit();
         argumentKit.put(ArgumentType.TEXT, new SimpleArgumentWrapper(text));
 
         textContainer.process(user, argumentKit);
         return arguments;
+    }
+
+    private void register(HandlingMethodGroup group, Object handler, Class<? extends Annotation> annotationType) {
+        for (Method method : handler.getClass().getMethods()) {
+            if (method.isAnnotationPresent(annotationType)) {
+                group.register(method.getAnnotation(annotationType), handler, method);
+            }
+        }
     }
 }

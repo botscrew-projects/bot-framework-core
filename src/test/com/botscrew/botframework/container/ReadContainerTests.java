@@ -1,15 +1,18 @@
 package com.botscrew.botframework.container;
 
+import com.botscrew.botframework.annotation.Intent;
 import com.botscrew.botframework.annotation.Read;
 import com.botscrew.botframework.domain.method.group.impl.ReadHandlingMethodGroup;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
 public class ReadContainerTests {
     private ReadHandlingMethodGroup readHandlingMethodGroup;
     private ReadContainer readContainer;
     private boolean called;
-    private Object[] params;
 
 
     @Before
@@ -17,12 +20,16 @@ public class ReadContainerTests {
         readHandlingMethodGroup = new ReadHandlingMethodGroup();
         readContainer = new ReadContainer(readHandlingMethodGroup);
         called = false;
-        params = new Object[0];
     }
 
     @Test
-    public void shouldThrowExceptionIfNoMethodsAreRegistered() throws Exception {
-        readHandlingMethodGroup.register(new SimpleReadHandler());
+    public void shouldThrowExceptionIfNoMethodsAreRegistered() {
+        Method method = Arrays.stream(SimpleReadHandler.class.getMethods())
+                .filter(m -> m.getName().equals("read"))
+                .findFirst().get();
+        Read annotation = method.getAnnotation(Read.class);
+
+        readHandlingMethodGroup.register(annotation, new SimpleReadHandler(), method);
 
         readContainer.process(() -> "default");
 
