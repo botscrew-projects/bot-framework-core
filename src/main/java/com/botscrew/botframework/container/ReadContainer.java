@@ -30,4 +30,9 @@ public class ReadContainer extends StateContainer {
     public ReadContainer(StateHandlingMethodGroup stateHandlingMethodGroup, StringParametersDetector stringParametersDetector) {
         super(stateHandlingMethodGroup, stringParametersDetector);
     }
+
+    @Override
+    protected String createNoHandlingMethodError(String state) {
+        return "No read event handler for user with state: " + state;
+    }
 }

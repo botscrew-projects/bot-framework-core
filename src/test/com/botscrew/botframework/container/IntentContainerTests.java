@@ -30,7 +30,7 @@ public class IntentContainerTests {
         params = new Object[0];
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = BotFrameworkException.class)
     public void shouldThrowExceptionIfNoMethodsAreRegistered() {
         ChatUser user = () -> "default";
         String intent = "intent";

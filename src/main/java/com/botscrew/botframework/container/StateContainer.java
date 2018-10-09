@@ -26,6 +26,7 @@ import com.botscrew.botframework.domain.method.key.StateMethodKey;
 import com.botscrew.botframework.domain.param.SimpleStringParametersDetector;
 import com.botscrew.botframework.domain.param.StringParametersDetector;
 import com.botscrew.botframework.domain.user.ChatUser;
+import com.botscrew.botframework.exception.BotFrameworkException;
 
 import java.util.Map;
 import java.util.Optional;
@@ -69,7 +70,7 @@ public abstract class StateContainer {
         Optional<HandlingMethod> instanceMethod = stateHandlingMethodGroup.find(key);
 
         if (!instanceMethod.isPresent()) {
-            throw new IllegalArgumentException("No eligible method found for state: " + stateWithoutParams);
+            throw new BotFrameworkException(createNoHandlingMethodError(stateWithoutParams));
         }
         Map<String, String> stateParameters = stringParametersDetector.getParameters(user.getState());
 
@@ -81,4 +82,6 @@ public abstract class StateContainer {
 
         instanceMethod.get().invoke(originalKit);
     }
+
+    protected abstract String createNoHandlingMethodError(String state);
 }

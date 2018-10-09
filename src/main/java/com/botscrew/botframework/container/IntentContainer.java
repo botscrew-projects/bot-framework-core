@@ -53,4 +53,9 @@ public class IntentContainer extends StateAndValueContainer {
             kit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }
     }
+
+    @Override
+    protected String createNoHandlingMethodError(String state, String value) {
+        return "No handling method found for intent event: '" + value + "' and user state: '" + state + "'";
+    }
 }

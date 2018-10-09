@@ -30,4 +30,9 @@ public class LocationContainer extends StateContainer {
     public LocationContainer(StateHandlingMethodGroup stateHandlingMethodGroup, StringParametersDetector stringParametersDetector) {
         super(stateHandlingMethodGroup, stringParametersDetector);
     }
+
+    @Override
+    protected String createNoHandlingMethodError(String state) {
+        return "No location event handler for user with state: " + state;
+    }
 }

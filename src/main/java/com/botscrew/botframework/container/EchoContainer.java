@@ -30,4 +30,9 @@ public class EchoContainer extends StateContainer {
     public EchoContainer(StateHandlingMethodGroup stateHandlingMethodGroup, StringParametersDetector stringParametersDetector) {
         super(stateHandlingMethodGroup, stringParametersDetector);
     }
+
+    @Override
+    protected String createNoHandlingMethodError(String state) {
+        return "No echo event handler for user with state: " + state;
+    }
 }

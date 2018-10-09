@@ -30,4 +30,9 @@ public class TextContainer extends StateContainer {
     public TextContainer(StateHandlingMethodGroup stateHandlingMethodGroup, StringParametersDetector stringParametersDetector) {
         super(stateHandlingMethodGroup, stringParametersDetector);
     }
+
+    @Override
+    protected String createNoHandlingMethodError(String state) {
+        return "No text event handler for user with state: " + state;
+    }
 }

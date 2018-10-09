@@ -24,6 +24,7 @@ import com.botscrew.botframework.domain.method.key.StateAndValueMethodKey;
 import com.botscrew.botframework.domain.param.SimpleStringParametersDetector;
 import com.botscrew.botframework.domain.param.StringParametersDetector;
 import com.botscrew.botframework.domain.user.ChatUser;
+import com.botscrew.botframework.exception.BotFrameworkException;
 
 import java.util.Optional;
 
@@ -71,12 +72,14 @@ public abstract class StateAndValueContainer {
         Optional<HandlingMethod> instanceMethod = handlingMethodGroup.find(key);
 
         if (!instanceMethod.isPresent()) {
-            throw new IllegalArgumentException("No eligible method found for state: " + user.getState() + " and value: " + value);
+            throw new BotFrameworkException(createNoHandlingMethodError(stateWithoutParams, valueWithoutParams));
         }
         fillArgumentKit(user, value, originalKit);
 
         instanceMethod.get().invoke(originalKit);
     }
+
+    protected abstract String createNoHandlingMethodError(String state, String value);
 
     public StringParametersDetector getStringParametersDetector() {
         return stringParametersDetector;

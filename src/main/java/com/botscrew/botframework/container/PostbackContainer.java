@@ -54,4 +54,9 @@ public class PostbackContainer extends StateAndValueContainer {
             kit.put(entry.getKey(), new SimpleArgumentWrapper(entry.getValue()));
         }
     }
+
+    @Override
+    protected String createNoHandlingMethodError(String state, String value) {
+        return "No handling method found for postback event: '" + value + "' and user state: '" + state + "'";
+    }
 }

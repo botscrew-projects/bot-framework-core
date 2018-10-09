@@ -51,4 +51,9 @@ public class ReferralContainer extends StateAndValueContainer {
         kit.put(ArgumentType.STATE_PARAMETERS, new SimpleArgumentWrapper(stateParams));
         kit.put(ArgumentType.USER, new SimpleArgumentWrapper(user));
     }
+
+    @Override
+    protected String createNoHandlingMethodError(String state, String value) {
+        return "No handling method found for referral event: '" + value + "' and user state: '" + state + "'";
+    }
 }
