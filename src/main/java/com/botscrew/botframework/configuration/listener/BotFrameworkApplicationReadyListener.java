@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.botscrew.botframework.configuration.bpp;
+package com.botscrew.botframework.configuration.listener;
 
 import com.botscrew.botframework.annotation.ChatEventsProcessor;
 import com.botscrew.botframework.annotation.IntentProcessor;

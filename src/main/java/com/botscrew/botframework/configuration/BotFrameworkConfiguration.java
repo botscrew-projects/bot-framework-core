@@ -16,7 +16,7 @@
 
 package com.botscrew.botframework.configuration;
 
-import com.botscrew.botframework.configuration.bpp.BotFrameworkApplicationReadyListener;
+import com.botscrew.botframework.configuration.listener.BotFrameworkApplicationReadyListener;
 import com.botscrew.botframework.container.*;
 import com.botscrew.botframework.domain.method.group.impl.*;
 import com.botscrew.botframework.sender.PlatformSender;
