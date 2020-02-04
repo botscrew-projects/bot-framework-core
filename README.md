@@ -4,29 +4,18 @@ Bot Framework makes it easier to work with chat bot applications
 based on Spring Boot architecture.
 
 
-
-
 ### Getting started:
 
 To include bot framework to your project 
-you can add dependency to your build configuration
+you can add dependency to your build configuration:
 
-Add the next repository path:
-
-`<repositories>
-        <repository>
-            <id>MyGet</id>
-            <url>https://www.myget.org/F/bots-crew/maven</url>
-        </repository>
-    </repositories>`
-
-Add the dependency:
-
-`<dependency>
-            <groupId>com.botscrew</groupId>
-            <artifactId>bot-framework-spring-boot-starter</artifactId>
-            <version>{bot-framework-version}</version>
-        </dependency>`
+```
+<dependency>
+    <groupId>com.botscrew</groupId>
+    <artifactId>bot-framework-core-spring-boot-starter</artifactId>
+    <version>1.2.1</version>
+</dependency>
+```
         
 ### User
 
